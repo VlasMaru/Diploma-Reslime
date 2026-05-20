@@ -1,0 +1,36 @@
+[gd_scene format=3 uid="uid://mrs7bnfw0yu2"]
+
+[ext_resource type="Script" uid="uid://buqu3tqlftqfa" path="res://ui/menus/main_menu/main_menu.gd" id="1_lwm1y"]
+[ext_resource type="PackedScene" uid="uid://ba13m8gsl851s" path="res://levels/enviroment/cave_bg_parallax.tscn" id="2_6s8a2"]
+
+[node name="MainMenu" type="Node2D" unique_id=787808734]
+script = ExtResource("1_lwm1y")
+
+[node name="play_button" type="Button" parent="." unique_id=2068045156]
+offset_left = 373.0
+offset_top = 104.0
+offset_right = 777.22363
+offset_bottom = 223.0
+theme_override_font_sizes/font_size = 41
+text = "Play"
+
+[node name="quit_button" type="Button" parent="." unique_id=1525866229]
+offset_left = 373.0
+offset_top = 407.0
+offset_right = 777.22363
+offset_bottom = 526.0
+theme_override_font_sizes/font_size = 41
+text = "Quit"
+
+[node name="settings_button" type="Button" parent="." unique_id=183905820]
+offset_left = 373.0
+offset_top = 257.0
+offset_right = 777.22363
+offset_bottom = 376.0
+theme_override_font_sizes/font_size = 41
+text = "Settings"
+
+[node name="cave_bg_parallax" parent="." unique_id=2068261102 instance=ExtResource("2_6s8a2")]
+
+[connection signal="pressed" from="play_button" to="." method="_on_play_button_pressed"]
+[connection signal="pressed" from="quit_button" to="." method="_on_quit_button_pressed"]

@@ -1,0 +1,70 @@
+[gd_scene format=3 uid="uid://drg1camsongv4"]
+
+[ext_resource type="Texture2D" uid="uid://7o62fi2d1p4u" path="res://assets/items/coin/spr_coin_azu.png" id="1_xvdsx"]
+
+[sub_resource type="GDScript" id="GDScript_xvdsx"]
+script/source = "extends Area2D
+
+func _on_body_entered(body: Node2D) -> void:
+	if body.name == \"Player\":
+		var up = get_tree().create_tween()
+		var oppacity = get_tree().create_tween()
+		up.tween_property(self,\"position\",position - Vector2(0,25),0.3)
+		oppacity.tween_property(self,\"modulate:a\",0,0.3)
+		up.tween_callback(queue_free)
+		body.crystal +=1;
+"
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_vwe3s"]
+radius = 5.0
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_dtohg"]
+atlas = ExtResource("1_xvdsx")
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ptfwy"]
+atlas = ExtResource("1_xvdsx")
+region = Rect2(16, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3wu2w"]
+atlas = ExtResource("1_xvdsx")
+region = Rect2(32, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_70k4x"]
+atlas = ExtResource("1_xvdsx")
+region = Rect2(48, 0, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_pirxt"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_dtohg")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ptfwy")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3wu2w")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_70k4x")
+}],
+"loop": true,
+"name": &"Idle",
+"speed": 5.0
+}]
+
+[node name="crystal_coin" type="Area2D" unique_id=70768556]
+script = SubResource("GDScript_xvdsx")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=2013277709]
+shape = SubResource("CircleShape2D_vwe3s")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1358002284]
+scale = Vector2(0.65625, 0.65625)
+sprite_frames = SubResource("SpriteFrames_pirxt")
+animation = &"Idle"
+autoplay = "Idle"
+frame_progress = 0.16715899
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
