@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://hw776nmy347a"]
 
 [ext_resource type="Texture2D" uid="uid://p1qo5sdyl6ng" path="res://assets/enemies/rat/attack_bite.png" id="1_dk24p"]
-[ext_resource type="Script" uid="uid://csgvckae12rw7" path="res://entitis/enemies/rat/rat_enemy.gd" id="1_k8mrl"]
+[ext_resource type="Script" uid="uid://csgvckae12rw7" path="res://entitys/enemies/rat/rat_enemy.gd" id="1_k8mrl"]
 [ext_resource type="Texture2D" uid="uid://oicsl2oe5joj" path="res://assets/enemies/rat/rat-death.png" id="2_k8mrl"]
 [ext_resource type="Texture2D" uid="uid://bisnyndr2emvc" path="res://assets/enemies/rat/hurt.png" id="3_gaad3"]
 [ext_resource type="Texture2D" uid="uid://ciui7albakp2r" path="res://assets/enemies/rat/idle.png" id="4_yjljn"]

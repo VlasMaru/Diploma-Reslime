@@ -1,0 +1,12 @@
+[gd_scene format=3 uid="uid://wpcwvxwh0kut"]
+
+[ext_resource type="Texture2D" uid="uid://c2v1he867p0ds" path="res://assets/bg/start_cave/bg.png" id="1_dglq5"]
+
+[node name="StartCaveBg" type="ParallaxBackground" unique_id=267352750]
+
+[node name="ParallaxLayer" type="ParallaxLayer" parent="." unique_id=961820376]
+
+[node name="Bg" type="Sprite2D" parent="ParallaxLayer" unique_id=1403717618]
+position = Vector2(676, 315)
+scale = Vector2(0.64969754, 0.6496976)
+texture = ExtResource("1_dglq5")

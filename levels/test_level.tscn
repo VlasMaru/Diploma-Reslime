@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://dtymotkcjodc4"]
 
-[ext_resource type="PackedScene" uid="uid://4h6t3fhiwcgb" path="res://entitis/player/player.tscn" id="1_wkb0e"]
+[ext_resource type="PackedScene" uid="uid://4h6t3fhiwcgb" path="res://entitys/player/player.tscn" id="1_wkb0e"]
 [ext_resource type="Texture2D" uid="uid://b0h1scnkpuq1i" path="res://assets/bg/parallax_cave_asset/1.png" id="2_paa45"]
 [ext_resource type="Texture2D" uid="uid://dw6auefbe5q6s" path="res://assets/bg/parallax_cave_asset/2.png" id="3_axl34"]
 [ext_resource type="Texture2D" uid="uid://dcc4360q40pbl" path="res://assets/bg/parallax_cave_asset/3fx.png" id="4_8hjdj"]
@@ -12,7 +12,7 @@
 [ext_resource type="Texture2D" uid="uid://b3xdldq26ww3u" path="res://assets/bg/parallax_cave_asset/9.png" id="10_68kkm"]
 [ext_resource type="Texture2D" uid="uid://buyh4ev21kpbn" path="res://assets/textures/cave_set/Tilesetv3.png" id="11_n4g7x"]
 [ext_resource type="PackedScene" uid="uid://jujejrmu8dgp" path="res://ui/hud/player_hud.tscn" id="13_axl34"]
-[ext_resource type="PackedScene" uid="uid://drg1camsongv4" path="res://entitis/collectable-items/crystal_coin.tscn" id="14_8hjdj"]
+[ext_resource type="PackedScene" uid="uid://drg1camsongv4" path="res://entitys/collectable-items/crystal_coin.tscn" id="14_8hjdj"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_atrxo"]
 texture = ExtResource("11_n4g7x")
@@ -217,7 +217,9 @@ texture = ExtResource("11_n4g7x")
 15:12/0 = 0
 16:12/0 = 0
 0:13/0 = 0
+0:13/0/physics_layer_0/polygon_0/points = PackedVector2Array(-5.66555, 3.4173164, 0.8093643, -2.1583042, 8, -3.057598, 8, 1.978447, 8, 8, -5.66555, 8)
 1:13/0 = 0
+1:13/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -2.6978807, -4.0468216, -4.856185, -0.62950516, -4.856185, 2.9676704, 0, 6.0252666, 3.5971756, 5.485693, 8, -8, 8, -8, 8)
 2:13/0 = 0
 2:13/0/physics_layer_0/polygon_0/points = PackedVector2Array(-0.62950516, 0.71943474, 8, -8, 8, 8, -8, 8)
 3:13/0 = 0
