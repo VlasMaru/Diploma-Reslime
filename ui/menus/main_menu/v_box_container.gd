@@ -10,11 +10,17 @@ func _ready() -> void:
 		play_button.grab_focus()
 
 func _on_play_button_pressed() -> void:
-	# Можно добавить звук нажатия перед загрузкой сцены
 	get_tree().change_scene_to_file("res://levels/test_level.tscn")
-
-func _on_settings_button_pressed() -> void:
-	pass # Здесь потом сделаем вызов окна настроек (например, show() для Panel)
 
 func _on_quit_button_pressed() -> void:
 	get_tree().quit()
+
+@onready var settings_panel: Panel = $"../../../../SettingsPanel"
+
+func _on_settings_button_pressed() -> void:
+	if settings_panel:
+		settings_panel.show()
+
+func _on_close_settings_button_pressed() -> void:
+	if settings_panel:
+		settings_panel.hide()
