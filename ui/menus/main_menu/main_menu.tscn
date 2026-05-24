@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://buqu3tqlftqfa" path="res://ui/menus/main_menu/main_menu.gd" id="1_lwm1y"]
 [ext_resource type="PackedScene" uid="uid://ba13m8gsl851s" path="res://levels/enviroment/cave_bg_parallax.tscn" id="2_6s8a2"]
 [ext_resource type="Script" uid="uid://p6qrcag0xk0p" path="res://ui/menus/main_menu/v_box_container.gd" id="3_ioe73"]
-[ext_resource type="FontFile" uid="uid://npwir57lsuws" path="res://assets/ui/PressStart2P-Regular.ttf" id="4_txwgg"]
+[ext_resource type="FontFile" uid="uid://npwir57lsuws" path="res://assets/ui/fonts/PressStart2P-Regular.ttf" id="4_txwgg"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_txwgg"]
 bg_color = Color(0, 0.43137255, 0.70980394, 0.64705884)

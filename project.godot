@@ -22,6 +22,10 @@ project/assembly_name="GoopLoop"
 
 enabled=PackedStringArray("res://addons/AS2P/plugin.cfg")
 
+[global_group]
+
+player=""
+
 [input]
 
 ui_left={

@@ -58,7 +58,7 @@ func _on_detector_death_body_entered(body: Node2D) -> void:
 func _on_detector_attack_body_entered(body: Node2D) -> void:
 	if body.name == "Player" and alive:
 		animPlayer.play("Bite")
-		body.health -= 100
+		body.health -= 20
 		death()
 
 func death():

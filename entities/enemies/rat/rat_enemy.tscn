@@ -1,13 +1,14 @@
 [gd_scene format=3 uid="uid://hw776nmy347a"]
 
 [ext_resource type="Texture2D" uid="uid://p1qo5sdyl6ng" path="res://assets/enemies/rat/attack_bite.png" id="1_dk24p"]
-[ext_resource type="Script" uid="uid://csgvckae12rw7" path="res://entitys/enemies/rat/rat_enemy.gd" id="1_k8mrl"]
+[ext_resource type="Script" uid="uid://csgvckae12rw7" path="res://entities/enemies/rat/rat_enemy.gd" id="1_k8mrl"]
 [ext_resource type="Texture2D" uid="uid://oicsl2oe5joj" path="res://assets/enemies/rat/rat-death.png" id="2_k8mrl"]
 [ext_resource type="Texture2D" uid="uid://bisnyndr2emvc" path="res://assets/enemies/rat/hurt.png" id="3_gaad3"]
 [ext_resource type="Texture2D" uid="uid://ciui7albakp2r" path="res://assets/enemies/rat/idle.png" id="4_yjljn"]
 [ext_resource type="Texture2D" uid="uid://b6xfopo2q7x3u" path="res://assets/enemies/rat/run.png" id="5_k1en0"]
 
 [sub_resource type="Animation" id="Animation_risx4"]
+length = 0.34285715
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -15,7 +16,7 @@ tracks/0/path = NodePath("AnimatedSprite2D:frame")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.083333336, 0.16666667, 0.25, 0.33333334, 0.41666666, 0.5, 0.5833333, 0.6666667, 0.75, 0.8333333, 0.9166667),
+"times": PackedFloat32Array(0, 0.028571429, 0.057142857, 0.08571429, 0.114285715, 0.14285715, 0.17142858, 0.2, 0.22857143, 0.25714287, 0.2857143, 0.31428573),
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
 "update": 1,
 "values": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
@@ -348,7 +349,7 @@ animations = [{
 }],
 "loop": false,
 "name": &"Bite",
-"speed": 12.0
+"speed": 35.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -473,7 +474,7 @@ libraries/ = SubResource("AnimationLibrary_8gggi")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1336573238]
 sprite_frames = SubResource("SpriteFrames_xpp0e")
-animation = &"Idle"
+animation = &"Bite"
 autoplay = "Idle"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=281174401]

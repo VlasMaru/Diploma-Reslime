@@ -639,7 +639,7 @@ _data = {
 &"WallSlide": SubResource("Animation_ys0f2")
 }
 
-[node name="Player" type="CharacterBody2D" unique_id=1611053112]
+[node name="Player" type="CharacterBody2D" unique_id=1611053112 groups=["player"]]
 script = ExtResource("1_mld6r")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1114802896]
@@ -649,7 +649,7 @@ shape = SubResource("RectangleShape2D_pl2bp")
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=10312668]
 position = Vector2(1, -8)
 sprite_frames = SubResource("SpriteFrames_4hx83")
-animation = &"Fall"
+animation = &"Attack"
 autoplay = "Idle"
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1449075574]
