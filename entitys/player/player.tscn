@@ -567,6 +567,9 @@ tracks/1/keys = {
 "values": ["Jump"]
 }
 
+[sub_resource type="Animation" id="Animation_pjjie"]
+length = 0.001
+
 [sub_resource type="Animation" id="Animation_i8tmd"]
 length = 0.7
 loop_mode = 1
@@ -631,6 +634,7 @@ _data = {
 &"Fall": SubResource("Animation_pruh0"),
 &"Idle": SubResource("Animation_yxw4a"),
 &"Jump": SubResource("Animation_je5tk"),
+&"RESET": SubResource("Animation_pjjie"),
 &"Run": SubResource("Animation_i8tmd"),
 &"WallSlide": SubResource("Animation_ys0f2")
 }
@@ -645,7 +649,7 @@ shape = SubResource("RectangleShape2D_pl2bp")
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=10312668]
 position = Vector2(1, -8)
 sprite_frames = SubResource("SpriteFrames_4hx83")
-animation = &"Attack"
+animation = &"Fall"
 autoplay = "Idle"
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1449075574]

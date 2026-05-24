@@ -11,6 +11,7 @@
 [ext_resource type="Texture2D" uid="uid://cd0hkkn85pyfi" path="res://assets/bg/parallax_cave_asset/8fx.png" id="9_pgbyh"]
 [ext_resource type="Texture2D" uid="uid://b3xdldq26ww3u" path="res://assets/bg/parallax_cave_asset/9.png" id="10_68kkm"]
 [ext_resource type="Texture2D" uid="uid://buyh4ev21kpbn" path="res://assets/textures/cave_set/Tilesetv3.png" id="11_n4g7x"]
+[ext_resource type="PackedScene" uid="uid://hw776nmy347a" path="res://entitys/enemies/rat/rat_enemy.tscn" id="12_8hjdj"]
 [ext_resource type="PackedScene" uid="uid://jujejrmu8dgp" path="res://ui/hud/player_hud.tscn" id="13_axl34"]
 [ext_resource type="PackedScene" uid="uid://drg1camsongv4" path="res://entitys/collectable-items/crystal_coin.tscn" id="14_8hjdj"]
 
@@ -221,7 +222,7 @@ texture = ExtResource("11_n4g7x")
 1:13/0 = 0
 1:13/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -2.6978807, -4.0468216, -4.856185, -0.62950516, -4.856185, 2.9676704, 0, 6.0252666, 3.5971756, 5.485693, 8, -8, 8, -8, 8)
 2:13/0 = 0
-2:13/0/physics_layer_0/polygon_0/points = PackedVector2Array(-0.62950516, 0.71943474, 8, -8, 8, 8, -8, 8)
+2:13/0/physics_layer_0/polygon_0/points = PackedVector2Array(-0.449646, 0.5395775, 8, -8, 8, 8, -8, 8)
 3:13/0 = 0
 3:13/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 0.62950516, 0.71943474, 8, 8, -8, 8)
 4:13/0 = 0
@@ -835,6 +836,18 @@ texture = ExtResource("10_68kkm")
 position = Vector2(382, 540)
 
 [node name="Mobs" type="Node2D" parent="." unique_id=357002120]
+
+[node name="RatEnemy" parent="Mobs" unique_id=1649969653 instance=ExtResource("12_8hjdj")]
+position = Vector2(692, 532)
+
+[node name="RatEnemy2" parent="Mobs" unique_id=804158 instance=ExtResource("12_8hjdj")]
+position = Vector2(181, 450)
+
+[node name="RatEnemy3" parent="Mobs" unique_id=436644026 instance=ExtResource("12_8hjdj")]
+position = Vector2(529, 356)
+
+[node name="RatEnemy4" parent="Mobs" unique_id=1688666696 instance=ExtResource("12_8hjdj")]
+position = Vector2(103, 534)
 
 [node name="PlayerHud" parent="." unique_id=759456732 instance=ExtResource("13_axl34")]
 

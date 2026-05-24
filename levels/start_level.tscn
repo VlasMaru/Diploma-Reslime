@@ -1441,6 +1441,9 @@ texture = ExtResource("2_ao76o")
 physics_layer_0/collision_layer = 1
 sources/0 = SubResource("TileSetAtlasSource_sq6n3")
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ao76o"]
+size = Vector2(17, 42)
+
 [node name="StartLevel" type="Node2D" unique_id=1961062995]
 
 [node name="StartCaveBg" parent="." unique_id=267352750 instance=ExtResource("1_ii2ba")]
@@ -1459,3 +1462,9 @@ layer_0/tile_data = PackedInt32Array(196608, 196608, 5, 262144, 262144, 3, 32768
 
 [node name="Player" parent="." unique_id=1611053112 instance=ExtResource("3_ao76o")]
 position = Vector2(33, 72)
+
+[node name="EnterTrigger" type="Area2D" parent="." unique_id=830599906]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="EnterTrigger" unique_id=2038557189]
+position = Vector2(600.5, 90)
+shape = SubResource("RectangleShape2D_ao76o")
