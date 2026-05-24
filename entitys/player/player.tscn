@@ -242,7 +242,7 @@ animations = [{
 }],
 "loop": false,
 "name": &"Damage",
-"speed": 10.0
+"speed": 16.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -639,7 +639,11 @@ _data = {
 &"WallSlide": SubResource("Animation_ys0f2")
 }
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_pjjie"]
+size = Vector2(18, 14)
+
 [node name="Player" type="CharacterBody2D" unique_id=1611053112]
+collision_layer = 2
 script = ExtResource("1_mld6r")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1114802896]
@@ -649,7 +653,7 @@ shape = SubResource("RectangleShape2D_pl2bp")
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=10312668]
 position = Vector2(1, -8)
 sprite_frames = SubResource("SpriteFrames_4hx83")
-animation = &"Fall"
+animation = &"Idle"
 autoplay = "Idle"
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1449075574]
@@ -671,3 +675,16 @@ one_shot = true
 [node name="WallJumpLock" type="Timer" parent="." unique_id=144861564]
 wait_time = 0.15
 one_shot = true
+
+[node name="AttackDirection" type="Node2D" parent="." unique_id=389943722]
+position = Vector2(0, -3)
+
+[node name="AttackRange" type="Area2D" parent="AttackDirection" unique_id=1665923694]
+collision_layer = 0
+collision_mask = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AttackDirection/AttackRange" unique_id=451756334]
+position = Vector2(19, 2.3841858e-07)
+shape = SubResource("RectangleShape2D_pjjie")
+
+[connection signal="body_entered" from="AttackDirection/AttackRange" to="." method="_on_attack_range_body_entered"]
