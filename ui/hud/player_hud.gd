@@ -12,11 +12,18 @@ extends CanvasLayer
 var player: CharacterBody2D = null
 
 func _process(_delta: float) -> void:
-	# Ищем игрока, если он еще не найден
+	# 1. Если игрок не найден или ссылка на него устарела, ищем снова
 	if not is_instance_valid(player):
 		player = get_tree().get_first_node_in_group("player")
+	
+	# 2. Если после поиска игрок все еще null (не найден), выходим из функции
+	if not is_instance_valid(player):
 		return
 	
-	# Обновляем UI только если игрок найден
-	health_bar.value = player.health
-	gem_label.text = str(player.crystal)
+	# 3. Обновляем UI только если мы точно знаем, что игрок существует
+	# Используем проверку 'get', чтобы избежать ошибок, если у игрока нет свойств
+	if "health" in player:
+		health_bar.value = player.health
+	
+	if "crystal" in player:
+		gem_label.text = str(player.crystal)

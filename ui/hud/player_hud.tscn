@@ -11,29 +11,31 @@
 [sub_resource type="GDScript" id="GDScript_qx3r3"]
 script/source = "extends Label
 
+var player: CharacterBody2D = null
 
-# Called when the node enters the scene tree for the first time.
-func _ready() -> void:
-	pass # Replace with function body.
-
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-	text = \"HP:\" + str($\"../../Player/Player\".health)
+func _process(_delta: float) -> void:
+	# 1. Если переменная player пуста, пытаемся найти его в группе
+	if player == null:
+		player = get_tree().get_first_node_in_group(\"player\")
+		return # Если игрока еще нет, просто пропускаем этот кадр
+	
+	# 2. Если игрок найден, безопасно обращаемся к здоровью
+	text = \"HP: \" + str(player.health)
 "
 
 [sub_resource type="GDScript" id="GDScript_vlvns"]
 script/source = "extends Label
 
+var player: CharacterBody2D = null
 
-# Called when the node enters the scene tree for the first time.
-func _ready() -> void:
-	pass # Replace with function body.
+func _process(_delta: float) -> void:
+	# 1. Ищем игрока через группу, если он ещё не найден
+	if not is_instance_valid(player):
+		player = get_tree().get_first_node_in_group(\"player\")
+		return # Если игрока нет, ничего не делаем
 
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-	text = \"Score:\" + str($\"../../Player/Player\".crystal)
+	# 2. Обновляем текст
+	text = \"Score: \" + str(player.crystal)
 "
 
 [node name="PlayerHud" type="CanvasLayer" unique_id=759456732]

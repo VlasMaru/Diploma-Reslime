@@ -1,0 +1,15 @@
+[gd_scene format=3 uid="uid://c6rpqkhxsm24f"]
+
+[ext_resource type="Script" uid="uid://dw7wgdtc2kjtl" path="res://levels/terrain_generation.gd" id="1_18xq1"]
+[ext_resource type="TileSet" uid="uid://c72fkocgryt0e" path="res://assets/tilesets/terrain.tres" id="2_la0fh"]
+
+[node name="LevelGenerator" type="Node2D" unique_id=700836007]
+
+[node name="TerrainGeneration" type="Node2D" parent="." unique_id=641110373 node_paths=PackedStringArray("tile_layer")]
+script = ExtResource("1_18xq1")
+width = 120
+height = 70
+tile_layer = NodePath("Terrain")
+
+[node name="Terrain" type="TileMapLayer" parent="TerrainGeneration" unique_id=264640030]
+tile_set = ExtResource("2_la0fh")
