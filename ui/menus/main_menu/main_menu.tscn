@@ -2,35 +2,126 @@
 
 [ext_resource type="Script" uid="uid://buqu3tqlftqfa" path="res://ui/menus/main_menu/main_menu.gd" id="1_lwm1y"]
 [ext_resource type="PackedScene" uid="uid://ba13m8gsl851s" path="res://levels/enviroment/cave_bg_parallax.tscn" id="2_6s8a2"]
+[ext_resource type="Script" uid="uid://p6qrcag0xk0p" path="res://ui/menus/main_menu/v_box_container.gd" id="3_ioe73"]
+[ext_resource type="FontFile" uid="uid://npwir57lsuws" path="res://assets/ui/fonts/PressStart2P-Regular.ttf" id="4_txwgg"]
 
-[node name="MainMenu" type="Node2D" unique_id=787808734]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_txwgg"]
+bg_color = Color(0, 0.43137255, 0.70980394, 0.64705884)
+border_width_left = 15
+border_width_top = 15
+border_width_right = 15
+border_width_bottom = 15
+border_color = Color(0, 0.25490198, 0.3882353, 1)
+expand_margin_left = 30.0
+expand_margin_top = 7.0
+expand_margin_right = 30.0
+expand_margin_bottom = 7.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_j3h1s"]
+bg_color = Color(0.21176471, 0.7254902, 0.9490196, 1)
+border_width_left = 10
+border_width_top = 10
+border_width_right = 10
+border_width_bottom = 10
+border_color = Color(0, 0.25490198, 0.3882353, 1)
+expand_margin_left = 10.0
+expand_margin_right = 10.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_igis3"]
+bg_color = Color(0.21176471, 0.7254902, 0.9490196, 1)
+border_width_left = 10
+border_width_top = 10
+border_width_right = 10
+border_width_bottom = 10
+border_color = Color(0, 0.25490198, 0.3882353, 1)
+expand_margin_left = 10.0
+expand_margin_right = 10.0
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_txwgg"]
+
+[node name="MainMenu" type="Control" unique_id=1661720392]
+layout_mode = 3
+anchors_preset = 0
 script = ExtResource("1_lwm1y")
-
-[node name="play_button" type="Button" parent="." unique_id=2068045156]
-offset_left = 373.0
-offset_top = 104.0
-offset_right = 777.22363
-offset_bottom = 223.0
-theme_override_font_sizes/font_size = 41
-text = "Play"
-
-[node name="quit_button" type="Button" parent="." unique_id=1525866229]
-offset_left = 373.0
-offset_top = 407.0
-offset_right = 777.22363
-offset_bottom = 526.0
-theme_override_font_sizes/font_size = 41
-text = "Quit"
-
-[node name="settings_button" type="Button" parent="." unique_id=183905820]
-offset_left = 373.0
-offset_top = 257.0
-offset_right = 777.22363
-offset_bottom = 376.0
-theme_override_font_sizes/font_size = 41
-text = "Settings"
 
 [node name="cave_bg_parallax" parent="." unique_id=2068261102 instance=ExtResource("2_6s8a2")]
 
-[connection signal="pressed" from="play_button" to="." method="_on_play_button_pressed"]
-[connection signal="pressed" from="quit_button" to="." method="_on_quit_button_pressed"]
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=136852702]
+layout_mode = 0
+offset_right = 1152.0
+offset_bottom = 648.0
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer" unique_id=671088532]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="CenterContainer" type="CenterContainer" parent="MarginContainer/HBoxContainer" unique_id=661561283]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/HBoxContainer/CenterContainer" unique_id=2098778460]
+layout_mode = 2
+size_flags_horizontal = 6
+size_flags_vertical = 4
+theme_override_constants/separation = 40
+script = ExtResource("3_ioe73")
+
+[node name="play_button" type="Button" parent="MarginContainer/HBoxContainer/CenterContainer/VBoxContainer" unique_id=592664528]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_colors/font_color = Color(0.80219096, 0.80219114, 0.8021908, 1)
+theme_override_colors/font_pressed_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = ExtResource("4_txwgg")
+theme_override_font_sizes/font_size = 41
+theme_override_styles/normal = SubResource("StyleBoxFlat_txwgg")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_j3h1s")
+theme_override_styles/hover = SubResource("StyleBoxFlat_igis3")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_txwgg")
+text = "Play"
+
+[node name="settings_button" type="Button" parent="MarginContainer/HBoxContainer/CenterContainer/VBoxContainer" unique_id=389468352]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.80219096, 0.80219114, 0.8021908, 1)
+theme_override_colors/font_pressed_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = ExtResource("4_txwgg")
+theme_override_font_sizes/font_size = 41
+theme_override_styles/normal = SubResource("StyleBoxFlat_txwgg")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_j3h1s")
+theme_override_styles/hover = SubResource("StyleBoxFlat_igis3")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_txwgg")
+text = "Settings"
+
+[node name="quit_button" type="Button" parent="MarginContainer/HBoxContainer/CenterContainer/VBoxContainer" unique_id=702778173]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.80219096, 0.80219114, 0.8021908, 1)
+theme_override_colors/font_pressed_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = ExtResource("4_txwgg")
+theme_override_font_sizes/font_size = 41
+theme_override_styles/normal = SubResource("StyleBoxFlat_txwgg")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_j3h1s")
+theme_override_styles/hover = SubResource("StyleBoxFlat_igis3")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_txwgg")
+text = "Quit"
+
+[node name="SettingsPanel" type="Panel" parent="." unique_id=699070785]
+visible = false
+layout_mode = 0
+offset_right = 1152.0
+offset_bottom = 651.0
+
+[node name="close_settings_button" type="Button" parent="SettingsPanel" unique_id=355001318]
+layout_mode = 0
+offset_right = 8.0
+offset_bottom = 8.0
+theme_override_fonts/font = ExtResource("4_txwgg")
+text = "Close"
+
+[connection signal="pressed" from="MarginContainer/HBoxContainer/CenterContainer/VBoxContainer/play_button" to="MarginContainer/HBoxContainer/CenterContainer/VBoxContainer" method="_on_play_button_pressed"]
+[connection signal="pressed" from="MarginContainer/HBoxContainer/CenterContainer/VBoxContainer/settings_button" to="MarginContainer/HBoxContainer/CenterContainer/VBoxContainer" method="_on_settings_button_pressed"]
+[connection signal="pressed" from="MarginContainer/HBoxContainer/CenterContainer/VBoxContainer/quit_button" to="MarginContainer/HBoxContainer/CenterContainer/VBoxContainer" method="_on_quit_button_pressed"]
+[connection signal="pressed" from="SettingsPanel/close_settings_button" to="MarginContainer/HBoxContainer/CenterContainer/VBoxContainer" method="_on_close_settings_button_pressed"]

@@ -2,7 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://wpcwvxwh0kut" path="res://levels/enviroment/start_cave_bg.tscn" id="1_ii2ba"]
 [ext_resource type="Texture2D" uid="uid://buyh4ev21kpbn" path="res://assets/textures/cave_set/Tilesetv3.png" id="2_ao76o"]
-[ext_resource type="PackedScene" uid="uid://4h6t3fhiwcgb" path="res://entitys/player/player.tscn" id="3_ao76o"]
+[ext_resource type="PackedScene" uid="uid://4h6t3fhiwcgb" path="res://entities/player/player.tscn" id="3_ao76o"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_csg43"]
 texture = ExtResource("2_ao76o")

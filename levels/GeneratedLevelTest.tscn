@@ -1,0 +1,13 @@
+[gd_scene format=3 uid="uid://dub08ck35b8ex"]
+
+[ext_resource type="PackedScene" uid="uid://c6rpqkhxsm24f" path="res://levels/LevelGenerator.tscn" id="1_tldlj"]
+[ext_resource type="PackedScene" uid="uid://4h6t3fhiwcgb" path="res://entities/player/player.tscn" id="2_bd5a2"]
+[ext_resource type="PackedScene" uid="uid://jujejrmu8dgp" path="res://ui/hud/player_hud.tscn" id="3_bd5a2"]
+
+[node name="GeneratedLevelTest" type="Node2D" unique_id=912313215]
+
+[node name="LevelGenerator" parent="." unique_id=700836007 instance=ExtResource("1_tldlj")]
+
+[node name="Player" parent="." unique_id=1611053112 instance=ExtResource("2_bd5a2")]
+
+[node name="PlayerHud" parent="." unique_id=759456732 instance=ExtResource("3_bd5a2")]

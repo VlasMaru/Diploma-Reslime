@@ -1,4 +1,4 @@
-extends Node2D
+extends Control
 
 
 func _on_quit_button_pressed() -> void:

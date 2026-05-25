@@ -1,36 +1,48 @@
 [gd_scene format=3 uid="uid://jujejrmu8dgp"]
 
+[ext_resource type="Script" uid="uid://chujniddafdm5" path="res://ui/hud/player_hud.gd" id="1_vlvns"]
+[ext_resource type="Texture2D" uid="uid://bfcqhxcp7pwi0" path="res://assets/ui/icons/Hearts_Yellow_1.png" id="2_hku2y"]
+[ext_resource type="Texture2D" uid="uid://dpc80pmnilgck" path="res://assets/ui/icons/sword_icon.png" id="3_rygsu"]
+[ext_resource type="Texture2D" uid="uid://osjhfpbhlsgj" path="res://assets/ui/icons/gem_icon_green.png" id="3_y2gd1"]
+[ext_resource type="Texture2D" uid="uid://b61sexn7f2ule" path="res://assets/ui/icons/armour_icon.png" id="4_boqfv"]
+[ext_resource type="FontFile" uid="uid://npwir57lsuws" path="res://assets/ui/fonts/PressStart2P-Regular.ttf" id="4_p1j4b"]
+[ext_resource type="Texture2D" uid="uid://d1uhsbg70pfet" path="res://assets/ui/icons/gem_icon.png" id="5_y2gd1"]
+
 [sub_resource type="GDScript" id="GDScript_qx3r3"]
 script/source = "extends Label
 
+var player: CharacterBody2D = null
 
-# Called when the node enters the scene tree for the first time.
-func _ready() -> void:
-	pass # Replace with function body.
-
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-	text = \"HP:\" + str($\"../../Player/Player\".health)
+func _process(_delta: float) -> void:
+	# 1. Если переменная player пуста, пытаемся найти его в группе
+	if player == null:
+		player = get_tree().get_first_node_in_group(\"player\")
+		return # Если игрока еще нет, просто пропускаем этот кадр
+	
+	# 2. Если игрок найден, безопасно обращаемся к здоровью
+	text = \"HP: \" + str(player.health)
 "
 
 [sub_resource type="GDScript" id="GDScript_vlvns"]
 script/source = "extends Label
 
+var player: CharacterBody2D = null
 
-# Called when the node enters the scene tree for the first time.
-func _ready() -> void:
-	pass # Replace with function body.
+func _process(_delta: float) -> void:
+	# 1. Ищем игрока через группу, если он ещё не найден
+	if not is_instance_valid(player):
+		player = get_tree().get_first_node_in_group(\"player\")
+		return # Если игрока нет, ничего не делаем
 
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-	text = \"Score:\" + str($\"../../Player/Player\".crystal)
+	# 2. Обновляем текст
+	text = \"Score: \" + str(player.crystal)
 "
 
 [node name="PlayerHud" type="CanvasLayer" unique_id=759456732]
+script = ExtResource("1_vlvns")
 
 [node name="HP" type="Label" parent="." unique_id=25782276]
+visible = false
 offset_left = 12.0
 offset_top = 13.0
 offset_right = 53.0
@@ -40,9 +52,89 @@ text = "HP"
 script = SubResource("GDScript_qx3r3")
 
 [node name="Crystal" type="Label" parent="." unique_id=1565047866]
+visible = false
 offset_left = 15.0
 offset_top = 65.0
 offset_right = 55.0
 offset_bottom = 88.0
 theme_override_font_sizes/font_size = 30
 script = SubResource("GDScript_vlvns")
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=1183940164]
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 40.0
+grow_horizontal = 2
+size_flags_horizontal = 3
+size_flags_vertical = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+metadata/_edit_use_anchors_ = true
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer" unique_id=1555980128]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="VBoxContainerStats" type="VBoxContainer" parent="MarginContainer/HBoxContainer" unique_id=2044337457]
+layout_mode = 2
+size_flags_horizontal = 2
+
+[node name="HealthSection" type="VBoxContainer" parent="MarginContainer/HBoxContainer/VBoxContainerStats" unique_id=299831596]
+custom_minimum_size = Vector2(200, 20)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+
+[node name="HeartIcon" type="TextureRect" parent="MarginContainer/HBoxContainer/VBoxContainerStats/HealthSection" unique_id=1383636449]
+visible = false
+layout_mode = 2
+texture = ExtResource("2_hku2y")
+stretch_mode = 2
+
+[node name="HealthBar" type="ProgressBar" parent="MarginContainer/HBoxContainer/VBoxContainerStats/HealthSection" unique_id=1211664937 groups=["player"]]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+size_flags_vertical = 1
+theme_override_fonts/font = ExtResource("4_p1j4b")
+step = 20.0
+show_percentage = false
+
+[node name="CurrencySection" type="HBoxContainer" parent="MarginContainer/HBoxContainer/VBoxContainerStats" unique_id=236599275]
+layout_mode = 2
+size_flags_horizontal = 0
+
+[node name="GemIcon" type="TextureRect" parent="MarginContainer/HBoxContainer/VBoxContainerStats/CurrencySection" unique_id=321477492]
+layout_mode = 2
+texture = ExtResource("3_y2gd1")
+expand_mode = 3
+stretch_mode = 4
+
+[node name="GemLabel" type="Label" parent="MarginContainer/HBoxContainer/VBoxContainerStats/CurrencySection" unique_id=2095174757]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+theme_override_fonts/font = ExtResource("4_p1j4b")
+
+[node name="WeaponSlots" type="HBoxContainer" parent="MarginContainer/HBoxContainer" unique_id=171889688]
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="WeaponIcon" type="TextureRect" parent="MarginContainer/HBoxContainer/WeaponSlots" unique_id=939454445]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+texture = ExtResource("3_rygsu")
+stretch_mode = 5
+
+[node name="ArmorIcon" type="TextureRect" parent="MarginContainer/HBoxContainer/WeaponSlots" unique_id=1008166391]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+texture = ExtResource("4_boqfv")
+stretch_mode = 5
+
+[node name="JewelryIcon" type="TextureRect" parent="MarginContainer/HBoxContainer/WeaponSlots" unique_id=2034316365]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+texture = ExtResource("5_y2gd1")
+stretch_mode = 5
