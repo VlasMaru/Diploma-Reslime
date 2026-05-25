@@ -93,7 +93,7 @@ layout_mode = 2
 texture = ExtResource("2_hku2y")
 stretch_mode = 2
 
-[node name="HealthBar" type="ProgressBar" parent="MarginContainer/HBoxContainer/VBoxContainerStats/HealthSection" unique_id=1211664937 groups=["player"]]
+[node name="HealthBar" type="ProgressBar" parent="MarginContainer/HBoxContainer/VBoxContainerStats/HealthSection" unique_id=1211664937]
 custom_minimum_size = Vector2(0, 20)
 layout_mode = 2
 size_flags_vertical = 1
