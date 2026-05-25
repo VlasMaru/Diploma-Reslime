@@ -34,7 +34,7 @@ func create_terrain():
 	# Выбираем алгоритм генерации
 	if is_cave:
 		map_data = generate_cave()
-		map_data = expand_caves_softer(map_data)
+		#map_data = expand_caves_softer(map_data)
 
 	else:
 		map_data = generate_bsp()
@@ -155,15 +155,26 @@ func _create_tunnel(map: Array, start: Vector2i, end: Vector2i):
 		map[y][x] = 0
 		y += 1 if end.y > y else -1
 
+# Вместо set_cell используйте set_cells_terrain_connect
 func draw_map(map_data: Array):
 	tile_layer.clear()
+	
+	# Собираем список координат для каждой группы
+	var walls = []
+	var floors = []
+	
 	for y in range(height):
 		for x in range(width):
-			var tile_pos = Vector2i(x, y)
 			if map_data[y][x] == 1:
-				tile_layer.set_cell(tile_pos, 0, Vector2i(1, 14)) 
+				walls.append(Vector2i(x, y))
 			else:
-				tile_layer.set_cell(tile_pos, 0, Vector2i(10, 12))
+				floors.append(Vector2i(x, y))
+	
+	# Рисуем пол (ID 0 - это ваш Terrain Set, ID 1 - это сам Floor в Terrain)
+	tile_layer.set_cells_terrain_connect(floors, 0, 1)
+	
+	# Рисуем стены (ID 0 - это ваш Terrain Set, ID 0 - это сам Wall в Terrain)
+	tile_layer.set_cells_terrain_connect(walls, 0, 0)
 				
 func spawn_player(map_data: Array):
 	if current_player == null:
