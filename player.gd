@@ -32,7 +32,6 @@ var state = MOVE
 
 func _ready() -> void:
 	animPlay.animation_finished.connect(_on_animation_finished)
-	$HurtBox.add_to_group("hurtbox")
 
 func _physics_process(delta: float) -> void:
 	# обработка смерти
@@ -208,3 +207,4 @@ func _on_attack_range_body_entered(body: Node2D) -> void:
 
 func _on_attack_range_body_exited(body: Node2D) -> void:
 	bodyInAttackRange = false
+	target = null

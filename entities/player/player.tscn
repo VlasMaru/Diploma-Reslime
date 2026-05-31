@@ -640,10 +640,7 @@ _data = {
 }
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_pjjie"]
-size = Vector2(14, 14)
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_qiwj3"]
-size = Vector2(12, 11)
+size = Vector2(16, 14)
 
 [node name="Player" type="CharacterBody2D" unique_id=1611053112 groups=["player"]]
 collision_layer = 2
@@ -688,17 +685,8 @@ collision_layer = 0
 collision_mask = 4
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="AttackDirection/AttackRange" unique_id=451756334]
-position = Vector2(16, 0)
+position = Vector2(17, 0)
 shape = SubResource("RectangleShape2D_pjjie")
 
-[node name="HurtBox" type="Node2D" parent="." unique_id=2146830027]
-
-[node name="HurtArea" type="Area2D" parent="HurtBox" unique_id=387656299]
-collision_layer = 6
-collision_mask = 4
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="HurtBox/HurtArea" unique_id=208260026]
-position = Vector2(1, -2.5)
-shape = SubResource("RectangleShape2D_qiwj3")
-
 [connection signal="body_entered" from="AttackDirection/AttackRange" to="." method="_on_attack_range_body_entered"]
+[connection signal="body_exited" from="AttackDirection/AttackRange" to="." method="_on_attack_range_body_exited"]

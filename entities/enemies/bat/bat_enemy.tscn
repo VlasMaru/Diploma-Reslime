@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://djoxsxl1wbne"]
 
 [ext_resource type="Texture2D" uid="uid://vuwlxycv1ka7" path="res://assets/enemies/bat/attack.png" id="1_6fuk8"]
+[ext_resource type="PackedScene" uid="uid://drg1camsongv4" path="res://entities/collectable-items/crystal_coin.tscn" id="1_11c4q"]
 [ext_resource type="Texture2D" uid="uid://c5a0bh6pd7qv2" path="res://assets/enemies/bat/death.png" id="2_jyyn7"]
 [ext_resource type="Texture2D" uid="uid://6g71wh1nx48y" path="res://assets/enemies/bat/hurt.png" id="3_6fuk8"]
 [ext_resource type="Texture2D" uid="uid://cp83x5kj0k2kp" path="res://assets/enemies/bat/fly.png" id="4_11c4q"]
@@ -8,18 +9,25 @@
 [sub_resource type="GDScript" id="GDScript_jyyn7"]
 script/source = "extends CharacterBody2D
 
+@export var crystal_scene: PackedScene
+
 enum {
 	IDLE,
 	ATTACK,
-	CHASE, 
+	ATTACK_COOLDOWN,
+	CHASE,
 	DEATH,
-	DAMAGE 
+	DAMAGE
 }
 
 var state: int = IDLE:
 	set(val):
 		if state == DEATH:
 			return
+
+		if state == val:
+			return
+
 		state = val
 		enter_state()
 
@@ -27,130 +35,188 @@ var health: int = 30:
 	set(val):
 		if state == DEATH:
 			return
+
 		health = val
+
 		if health > 0:
 			state = DAMAGE
 
-var player_pos: Vector2 = Vector2.ZERO 
+var player_pos: Vector2 = Vector2.ZERO
 var direction: Vector2 = Vector2.ZERO
 var speed = 200.0
 
-# --- НАСТРОЙКИ ПОЛЕТА ЛЕТУЧЕЙ МЫШИ ---
-@export var min_ground_distance: float = 100.0 # Минимальная высота над поверхностью земли
+@export var min_ground_distance: float = 100.0
 
-@onready var anim = $\"AnimatedSprite2D\"
-@onready var animPlayer = $AnimationPlayer
+var player_in_range = false
 var alive = true
 
-# Программный луч для динамического удержания высоты над рельефом
+@onready var anim = $AnimatedSprite2D
+@onready var animPlayer = $AnimationPlayer
+@onready var attack_cooldown = $AttackCooldown
+
 var floor_detector: RayCast2D
 
+
 func _ready() -> void:
-	Signals.connect(\"player_position_update\", Callable(self,\"_on_player_position_update\"))
+	Signals.connect(
+		\"player_position_update\",
+		Callable(self, \"_on_player_position_update\")
+	)
+
 	animPlayer.animation_finished.connect(_on_animation_finished)
-	
-	# Инициализируем RayCast2D программно
+
 	floor_detector = RayCast2D.new()
-	floor_detector.target_position = Vector2(0, 300) # Длина луча сканирования вниз
-	floor_detector.collision_mask = 1 # Слой коллизии твоей твердой земли (TileMap)
+	floor_detector.target_position = Vector2(0, 300)
+	floor_detector.collision_mask = 1
 	add_child(floor_detector)
 
-func _on_player_position_update(pos: Vector2):
-	player_pos = pos
-
-func enter_state():
-	match state:
-		IDLE:
-			velocity = Vector2.ZERO # Полная остановка в воздухе по обеим осям
-			animPlayer.play(\"Idle\")
-		CHASE:
-			$AttackDirection/AttackRange/CollisionShape2D.set_deferred(\"disabled\", false)
-			$Detector/CollisionShape2D.set_deferred(\"disabled\", false)
-		ATTACK:
-			velocity = Vector2.ZERO # Останавливаемся во время укуса
-			animPlayer.play(\"Bite\")
-			deal_damage()
-		DAMAGE:
-			velocity = Vector2.ZERO # Застываем при получении урона
-			animPlayer.play(\"GetHit\")
-		DEATH:
-			death()
 
 func _physics_process(delta: float) -> void:
 	if health <= 0 and state != DEATH:
 		state = DEATH
-		
-	# Гравитация воздействует на летучую мышь ТОЛЬКО в состоянии смерти
+
 	if state == DEATH:
 		if not is_on_floor():
 			velocity += get_gravity() * delta
+
 		move_and_slide()
 		return
 
-	# Обработка кинематики полета в зависимости от состояния
-	if state == CHASE:
-		chase_state(delta)
-	elif state == IDLE or state == DAMAGE or state == ATTACK:
-		# Плавное торможение (затухание скорости) в воздухе при остановках
-		velocity = velocity.move_toward(Vector2.ZERO, speed * delta * 4)
-		
+	match state:
+		CHASE:
+			chase_state(delta)
+
+		ATTACK_COOLDOWN:
+			velocity = velocity.move_toward(
+				Vector2.ZERO,
+				speed * delta * 4
+			)
+
+		IDLE, DAMAGE, ATTACK:
+			velocity = velocity.move_toward(
+				Vector2.ZERO,
+				speed * delta * 4
+			)
+
 	move_and_slide()
 
+
+func _on_player_position_update(pos: Vector2):
+	player_pos = pos
+
+
+func enter_state():
+	match state:
+		IDLE:
+			velocity = Vector2.ZERO
+			animPlayer.play(\"Idle\")
+
+		CHASE:
+			$AttackDirection/AttackRange/CollisionShape2D.set_deferred(\"disabled\", false)
+			$Detector/CollisionShape2D.set_deferred(\"disabled\",false)
+
+		ATTACK:
+			velocity = Vector2.ZERO
+			animPlayer.play(\"Bite\")
+			deal_damage()
+
+		ATTACK_COOLDOWN:
+			velocity = Vector2.ZERO
+			animPlayer.play(\"Idle\")
+			attack_cooldown.start()
+
+		DAMAGE:
+			velocity = Vector2.ZERO
+			animPlayer.play(\"GetHit\")
+
+		DEATH:
+			death()
+
+
 func chase_state(delta: float):
-	# Теперь мышь летит строго на игрока по вектору X и Y без искусственных ограничений высоты
 	var target_pos = player_pos
 
-	# Вычисляем полноценный 2D-вектор направления к игроку
-	direction = (target_pos - global_position).normalized()
-	
-	# Реализация плавного полета и пикирования по обеим осям (X и Y)
-	velocity = velocity.move_toward(direction * speed, speed * delta * 5)
-	
-	# Разворот спрайта и хитбоксов по направлению полета
+	direction = (
+		target_pos - global_position
+	).normalized()
+
+	velocity = velocity.move_toward(
+		direction * speed,
+		speed * delta * 5
+	)
+
 	if direction.x < 0:
 		anim.flip_h = true
 		$AttackDirection.rotation_degrees = 180
+
 	elif direction.x > 0:
 		anim.flip_h = false
 		$AttackDirection.rotation_degrees = 0
 		
-	if animPlayer.has_animation(\"Fly\"):
-		animPlayer.play(\"Fly\")
-	else:
-		animPlayer.play(\"Run\")
+	animPlayer.play(\"Run\")
+
+	if player_in_range:
+		state = ATTACK
+
 
 func deal_damage():
 	var bodies = $AttackDirection/AttackRange.get_overlapping_bodies()
 	for body in bodies:
 		if body.name == \"Player\":
 			body.health -= 20
-		if (body.name == \"hurtbox\" and body.get_parent().name == \"Player\"):
+
+		if body.name == \"hurtbox\" and body.get_parent().name == \"Player\":
 			body.get_parent().health -= 20
-			
-		# Если у игрока закончилось ХП, мышь теряет интерес и переходит в IDLE
+
 		if \"health\" in body and body.health <= 0:
 			state = IDLE
 			$AttackDirection/AttackRange/CollisionShape2D.set_deferred(\"disabled\", true)
 			$Detector/CollisionShape2D.set_deferred(\"disabled\", true)
 
+
 func _on_animation_finished(anim_name: String):
-	if anim_name == \"Bite\" and state != DEATH:
-		$AttackDirection/AttackRange/CollisionShape2D.set_deferred(\"disabled\", true)
-		state = CHASE
-	elif anim_name == \"GetHit\" and state != DEATH:
-		state = CHASE
+	match anim_name:
+		\"Bite\":
+			if state != DEATH:
+				state = ATTACK_COOLDOWN
+				
+		\"GetHit\":
+			if state != DEATH:
+				state = CHASE
+
 
 func _on_detector_body_entered(body: Node2D) -> void:
 	if body.name == \"Player\" and state != DEATH:
 		state = CHASE
 
+
 func _on_detector_body_exited(body: Node2D) -> void:
 	if body.name == \"Player\" and state != DEATH:
 		state = IDLE
 
+
 func _on_attack_range_body_entered(body: Node2D) -> void:
 	if body.name == \"Player\" and state != DEATH:
+		player_in_range = true
+
+
+func _on_attack_range_body_exited(body: Node2D) -> void:
+	if body.name == \"Player\":
+		player_in_range = false
+
+		if state == ATTACK_COOLDOWN:
+			state = CHASE
+
+
+func _on_attack_cooldown_timeout():
+	if state == DEATH:
+		return
+
+	if player_in_range:
 		state = ATTACK
+	else:
+		state = CHASE
+
 
 func death():
 	alive = false
@@ -158,6 +224,11 @@ func death():
 	$AttackDirection/AttackRange/CollisionShape2D.set_deferred(\"disabled\", true)
 	animPlayer.play(\"Death\")
 	await animPlayer.animation_finished
+	
+	var crystal = crystal_scene.instantiate()
+	crystal.global_position = global_position
+	get_parent().add_child(crystal)
+	
 	Signals.emit_signal(\"enemy_died\")
 	queue_free()
 "
@@ -624,9 +695,10 @@ radius = 128.0039
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_yvhbu"]
 size = Vector2(24, 26)
 
-[node name="BatEnemy" type="CharacterBody2D" unique_id=2137662292]
+[node name="BatEnemy" type="CharacterBody2D" unique_id=2137662292 groups=["enemies"]]
 collision_layer = 4
 script = SubResource("GDScript_jyyn7")
+crystal_scene = ExtResource("1_11c4q")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1616332376]
 libraries/ = SubResource("AnimationLibrary_hojkv")
@@ -661,6 +733,12 @@ collision_mask = 2
 position = Vector2(39.8125, 2)
 shape = SubResource("RectangleShape2D_yvhbu")
 
+[node name="AttackCooldown" type="Timer" parent="." unique_id=1763930018]
+wait_time = 0.5
+one_shot = true
+
 [connection signal="body_entered" from="Detector" to="." method="_on_detector_body_entered"]
 [connection signal="body_exited" from="Detector" to="." method="_on_detector_body_exited"]
 [connection signal="body_entered" from="AttackDirection/AttackRange" to="." method="_on_attack_range_body_entered"]
+[connection signal="body_exited" from="AttackDirection/AttackRange" to="." method="_on_attack_range_body_exited"]
+[connection signal="timeout" from="AttackCooldown" to="." method="_on_attack_cooldown_timeout"]
