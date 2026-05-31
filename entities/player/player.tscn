@@ -680,7 +680,6 @@ wait_time = 0.15
 one_shot = true
 
 [node name="AttackDirection" type="Node2D" parent="." unique_id=389943722]
-visible = false
 position = Vector2(0, -3)
 
 [node name="AttackRange" type="Area2D" parent="AttackDirection" unique_id=1665923694]

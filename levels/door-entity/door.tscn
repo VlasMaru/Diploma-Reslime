@@ -1,0 +1,115 @@
+[gd_scene format=3 uid="uid://df6dbhy5e0ibg"]
+
+[ext_resource type="Texture2D" uid="uid://bur2duvtki8sr" path="res://assets/textures/cave_set/door.png" id="1_saop2"]
+
+[sub_resource type="GDScript" id="GDScript_grhax"]
+script/source = "extends Area2D
+
+func _process(delta: float) -> void:
+	pass
+
+@onready var anim = $AnimatedSprite2D
+@onready var collision = $CollisionShape2D
+var is_open = false
+
+func _ready() -> void:
+	is_open = false
+	anim.play(\"Closed\")
+	Signals.enemy_died.connect(_on_enemy_died)
+	check_enemies_count()
+
+func _on_enemy_died() -> void:
+	print(\"X-X\")
+	check_enemies_count()
+
+func check_enemies_count() -> void:
+	if is_open:
+		return
+	var living_enemies = get_tree().get_nodes_in_group(\"enemies\")
+	print(living_enemies)
+	var alive_count = 0
+	for enemy in living_enemies:
+		if \"alive\" in enemy and enemy.alive:
+			alive_count += 1
+	if alive_count == 0:
+		open_door()
+
+func open_door() -> void:
+	is_open = true
+	anim.play(\"Opened\")
+	print(\"Все враги повержены! Дверь открыта.\")
+
+func _on_body_entered(body: Node2D) -> void:
+	if body.name == \"Player\" and is_open:
+		get_tree().change_scene_to_file(\"res://levels/start_level.tscn\")
+		
+"
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_uismi"]
+size = Vector2(29, 41.5)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fkx7j"]
+atlas = ExtResource("1_saop2")
+region = Rect2(0, 0, 48, 43)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_85c2j"]
+atlas = ExtResource("1_saop2")
+region = Rect2(49, 0, 48, 43)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_l1jj3"]
+atlas = ExtResource("1_saop2")
+region = Rect2(97, 0, 48, 43)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fa8cg"]
+atlas = ExtResource("1_saop2")
+region = Rect2(145, 0, 48, 43)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_n6uet"]
+atlas = ExtResource("1_saop2")
+region = Rect2(193, 0, 48, 43)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_yf8k7"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fkx7j")
+}],
+"loop": true,
+"name": &"Closed",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_85c2j")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_l1jj3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fa8cg")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_n6uet")
+}],
+"loop": true,
+"name": &"Opened",
+"speed": 5.0
+}]
+
+[node name="Door" type="Area2D" unique_id=162543411]
+collision_mask = 2
+script = SubResource("GDScript_grhax")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=318010292]
+position = Vector2(-1, 0.5)
+shape = SubResource("RectangleShape2D_uismi")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1462599493]
+position = Vector2(-9.536743e-07, 9.536743e-07)
+scale = Vector2(0.75984395, 0.75984406)
+sprite_frames = SubResource("SpriteFrames_yf8k7")
+animation = &"Opened"
+autoplay = "Closed"
+frame_progress = 0.38266444
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

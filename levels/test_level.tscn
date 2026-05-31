@@ -14,6 +14,7 @@
 [ext_resource type="PackedScene" uid="uid://hw776nmy347a" path="res://entities/enemies/rat/rat_enemy.tscn" id="12_8hjdj"]
 [ext_resource type="PackedScene" uid="uid://jujejrmu8dgp" path="res://ui/hud/player_hud.tscn" id="13_axl34"]
 [ext_resource type="PackedScene" uid="uid://drg1camsongv4" path="res://entities/collectable-items/crystal_coin.tscn" id="14_8hjdj"]
+[ext_resource type="PackedScene" uid="uid://df6dbhy5e0ibg" path="res://levels/door-entity/door.tscn" id="15_0vv12"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_atrxo"]
 texture = ExtResource("11_n4g7x")
@@ -856,3 +857,6 @@ position = Vector2(103, 534)
 
 [node name="crystal_coin" parent="Collectibles" unique_id=70768556 instance=ExtResource("14_8hjdj")]
 position = Vector2(476, 537)
+
+[node name="Door" parent="." unique_id=162543411 instance=ExtResource("15_0vv12")]
+position = Vector2(1104, 528)

@@ -44,10 +44,10 @@ func enter_state():
 		IDLE:
 			velocity.x = 0
 			animPlayer.play("Idle")
-			$AttackDirection/AttackRange/CollisionShape2D.set_deferred("disabled", false)
-			$Detector/CollisionShape2D.set_deferred("disabled", false)
 		CHASE:
 			chase_state()
+			$AttackDirection/AttackRange/CollisionShape2D.set_deferred("disabled", false)
+			$Detector/CollisionShape2D.set_deferred("disabled", false)
 		ATTACK:
 			velocity.x = 0
 			animPlayer.play("Bite")
@@ -72,13 +72,11 @@ func _physics_process(delta: float) -> void:
 	if state == CHASE:
 		chase_state()
 		
-	print(state)
 	move_and_slide()
 
 
 func chase_state():
 	direction = (player_pos - self.position).normalized()
-	print(direction)
 	velocity.x = direction.x * speed
 	
 	if direction.x < 0 :
@@ -100,18 +98,19 @@ func deal_damage():
 			body.health -= 20
 		if (body.name == "hurtbox" and body.get_parent().name == "Player"):
 			body.get_parent().health -= 20
+		if body.health <= 0:
+			state = IDLE
+			$AttackDirection/AttackRange/CollisionShape2D.set_deferred("disabled", true)
+			$Detector/CollisionShape2D.set_deferred("disabled", true)
+			
 
 
 
 func _on_animation_finished(anim_name: String):
 	if anim_name == "Bite" and state != DEATH:
 		$AttackDirection/AttackRange/CollisionShape2D.set_deferred("disabled", true)
-		state = IDLE
-	if anim_name == "Bite" and state != ATTACK:
-		$Detector/CollisionShape2D.set_deferred("disabled", true)
-		state = IDLE
-	
-	# 4. Выход из состояния получения урона
+		state = CHASE
+	# 4. Выход из состояния получения урона $Detector/CollisionShape2D.set_deferred("disabled", true)
 	elif anim_name == "GetHit" and state != DEATH:
 		# После получения удара крыса агрессивно продолжает погоню
 		state = CHASE
@@ -132,5 +131,7 @@ func death():
 	alive = false
 	velocity.x = 0
 	$AttackDirection/AttackRange/CollisionShape2D.set_deferred("disabled", true)
-	anim.play("Death")
-	anim.animation_finished.connect(queue_free)
+	animPlayer.play("Death")
+	await animPlayer.animation_finished
+	Signals.emit_signal("enemy_died")
+	queue_free()
