@@ -17,6 +17,7 @@ config/features=PackedStringArray("4.6", "Forward Plus")
 [autoload]
 
 Signals="*uid://bsplc1skocsvg"
+PlayerStats="*uid://bpc3d63u6qbk6"
 
 [dotnet]
 

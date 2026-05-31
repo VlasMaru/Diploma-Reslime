@@ -46,6 +46,8 @@ func enter_state():
 			animPlayer.play("Idle")
 			$AttackDirection/AttackRange/CollisionShape2D.set_deferred("disabled", false)
 			$Detector/CollisionShape2D.set_deferred("disabled", false)
+		CHASE:
+			chase_state()
 		ATTACK:
 			velocity.x = 0
 			animPlayer.play("Bite")
@@ -70,12 +72,13 @@ func _physics_process(delta: float) -> void:
 	if state == CHASE:
 		chase_state()
 		
+	print(state)
 	move_and_slide()
 
 
 func chase_state():
 	direction = (player_pos - self.position).normalized()
-	
+	print(direction)
 	velocity.x = direction.x * speed
 	
 	if direction.x < 0 :
@@ -95,12 +98,16 @@ func deal_damage():
 	for body in bodies:
 		if body.name == "Player":
 			body.health -= 20
+		if (body.name == "hurtbox" and body.get_parent().name == "Player"):
+			body.get_parent().health -= 20
 
 
 
 func _on_animation_finished(anim_name: String):
 	if anim_name == "Bite" and state != DEATH:
 		$AttackDirection/AttackRange/CollisionShape2D.set_deferred("disabled", true)
+		state = IDLE
+	if anim_name == "Bite" and state != ATTACK:
 		$Detector/CollisionShape2D.set_deferred("disabled", true)
 		state = IDLE
 	
@@ -120,11 +127,6 @@ func _on_detector_body_exited(body: Node2D) -> void:
 func _on_attack_range_body_entered(body: Node2D) -> void:
 	if body.name == "Player" and state != DEATH:
 		state = ATTACK
-
-func _on_detector_death_body_entered(body: Node2D) -> void:
-	if body.name == "Player" and state != DEATH:
-		body.velocity.y -= 200 # Отскок игрока
-		state = DEATH
 
 func death():
 	alive = false

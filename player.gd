@@ -1,5 +1,4 @@
 extends CharacterBody2D
-
 enum {
 	MOVE,
 	JUMP,
@@ -10,29 +9,22 @@ enum {
 	DEATH 
 }
 
-#константы
-const SPEED = 300.0
-const JUMP_VELOCITY = -400.0
-const WALL_SLIDE_SPEED = 120.0  
-const WALL_JUMP_PUSH = 200.0  
-const player_damage = 10 
-
 @onready var anim = $"AnimatedSprite2D"
 @onready var animPlay = $AnimationPlayer
 @onready var coyoteTimer = $CoyoteTime
 @onready var wallJumpLockTimer = $WallJumpLock
 
 var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
-var health: int = 100:
+var health: int = PlayerStats.current_health:
 	set(val):
 		if state == DEATH:
 			return
 		if val < health:
 			state = DAMAGE
 			animPlay.play("Damage")
-		health = val
-		
-var crystal = 0
+			PlayerStats.current_health = val
+			health = val
+
 var bodyInAttackRange = false
 var target
 var player_pos 
@@ -40,27 +32,32 @@ var state = MOVE
 
 func _ready() -> void:
 	animPlay.animation_finished.connect(_on_animation_finished)
+	$HurtBox.add_to_group("hurtbox")
 
 func _physics_process(delta: float) -> void:
+	# обработка смерти
 	if health <= 0 and state != DEATH:
 		state = DEATH
 		handle_death()
+		
 	if state == DEATH:
 		if not is_on_floor():
 			velocity.y += gravity * delta
 		move_and_slide()
 		return
+	
 	var was_on_floor = is_on_floor()
+	# конечный автомат
 	match state:
 		MOVE:
 			move_state(delta)
 		JUMP:
 			jump_state(delta)
 		FALL:
-			$CollisionShape2D.shape.size = Vector2(10, 14)
+			$CollisionShape2D.shape.size = Vector2(9, 14)
 			fall_state(delta)
 		WALLSLIDE:
-			$CollisionShape2D.shape.size = Vector2(10, 14)
+			$CollisionShape2D.shape.size = Vector2(9, 14)
 			wallslide_state(delta)
 		ATTACK:
 			attack_state(delta)
@@ -114,11 +111,12 @@ func fall_state(delta: float) -> void:
 	elif Input.is_action_just_pressed("jump") and not coyoteTimer.is_stopped():
 		perform_jump()
 		coyoteTimer.stop()
+		
 	elif Input.is_action_just_pressed("attack"):
 		perform_attack()
 
 func wallslide_state(delta: float) -> void:
-	velocity.y = move_toward(velocity.y, WALL_SLIDE_SPEED, gravity * delta)
+	velocity.y = move_toward(velocity.y, PlayerStats.wall_slide_speed, gravity * delta)
 	$CollisionShape2D.shape.size = Vector2(11, 14)
 	animPlay.play("WallSlide")
 	
@@ -137,17 +135,17 @@ func attack_state(delta: float) -> void:
 func damage_state(delta: float) -> void:
 	if not is_on_floor():
 		velocity.y += gravity * delta
-	velocity.x = move_toward(velocity.x, 0, SPEED)
+	velocity.x = move_toward(velocity.x, 0, PlayerStats.speed)
 
-#вспомогательные функции
+#ловит пользовательский ввод
 func apply_base_movement(delta: float) -> void:
 	if not is_on_floor():
 		velocity.y += gravity * delta
+		
 	var direction := Input.get_axis("left", "right")
-	
 	if wallJumpLockTimer.is_stopped():
 		if direction:
-			velocity.x = direction * SPEED
+			velocity.x = direction * PlayerStats.speed
 			if not is_on_wall() or is_on_floor():
 				anim.flip_h = (direction == -1)
 				if (direction == -1):
@@ -155,16 +153,16 @@ func apply_base_movement(delta: float) -> void:
 				else:
 					$AttackDirection.rotation_degrees = 0
 		else:
-			velocity.x = move_toward(velocity.x, 0, SPEED)
+			velocity.x = move_toward(velocity.x, 0, PlayerStats.speed)
 
 func perform_jump() -> void:
-	velocity.y = JUMP_VELOCITY
+	velocity.y = PlayerStats.jump_velocity
 	state = JUMP
 
 func perform_wall_jump() -> void:
 	var wall_normal = get_wall_normal()
-	velocity.y = JUMP_VELOCITY
-	velocity.x = wall_normal.x * WALL_JUMP_PUSH
+	velocity.y = PlayerStats.jump_velocity
+	velocity.x = wall_normal.x * PlayerStats.wall_jump_push
 	wallJumpLockTimer.start()
 	anim.flip_h = wall_normal.x < 0
 	if (wall_normal.x < 0):
@@ -177,17 +175,21 @@ func perform_attack() -> void:
 	animPlay.play("Attack")
 	state = ATTACK
 	if bodyInAttackRange and target != null:
-		target.health -= player_damage
-		if ($AttackDirection.rotation_degrees ==0):
+		target.health -= PlayerStats.damage
+		if ($AttackDirection.rotation_degrees == 0):
 			target.velocity.x += 200
 		else:
 			target.velocity.x -= 200
 		
 
+
+
+
 func handle_death() -> void:
 	velocity.x = 0
 	animPlay.play("Death")
 	await animPlay.animation_finished
+	PlayerStats.current_health = 100
 	get_tree().call_deferred("change_scene_to_file", "res://ui/menus/main_menu/main_menu.tscn")
 	
 

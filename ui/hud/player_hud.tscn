@@ -31,11 +31,11 @@ var player: CharacterBody2D = null
 func _process(_delta: float) -> void:
 	# 1. Ищем игрока через группу, если он ещё не найден
 	if not is_instance_valid(player):
-		player = get_tree().get_first_node_in_group(\"player\")
+		player = get_tree().get_first_node_in_group(\"player_stats\")
 		return # Если игрока нет, ничего не делаем
 
 	# 2. Обновляем текст
-	text = \"Score: \" + str(player.crystal)
+	text = \"Score: \" + str(player.crystals)
 "
 
 [node name="PlayerHud" type="CanvasLayer" unique_id=759456732]

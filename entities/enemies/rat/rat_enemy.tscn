@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://hw776nmy347a"]
 
 [ext_resource type="Texture2D" uid="uid://p1qo5sdyl6ng" path="res://assets/enemies/rat/attack_bite.png" id="1_dk24p"]
-[ext_resource type="Script" uid="uid://csgvckae12rw7" path="res://entitys/enemies/rat/rat_enemy.gd" id="1_k8mrl"]
+[ext_resource type="Script" uid="uid://csgvckae12rw7" path="res://entities/enemies/rat/rat_enemy.gd" id="1_k8mrl"]
 [ext_resource type="Texture2D" uid="uid://oicsl2oe5joj" path="res://assets/enemies/rat/rat-death.png" id="2_k8mrl"]
 [ext_resource type="Texture2D" uid="uid://bisnyndr2emvc" path="res://assets/enemies/rat/hurt.png" id="3_gaad3"]
 [ext_resource type="Texture2D" uid="uid://ciui7albakp2r" path="res://assets/enemies/rat/idle.png" id="4_yjljn"]
@@ -460,11 +460,8 @@ height = 44.0
 [sub_resource type="CircleShape2D" id="CircleShape2D_gaad3"]
 radius = 128.0039
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_k8mrl"]
-size = Vector2(34, 10)
-
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_gaad3"]
-size = Vector2(12, 10)
+size = Vector2(30, 10)
 
 [node name="RatEnemy" type="CharacterBody2D" unique_id=1649969653]
 collision_layer = 4
@@ -475,7 +472,7 @@ libraries/ = SubResource("AnimationLibrary_8gggi")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1336573238]
 sprite_frames = SubResource("SpriteFrames_xpp0e")
-animation = &"GetHit"
+animation = &"Idle"
 autoplay = "Idle"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=281174401]
@@ -491,15 +488,6 @@ collision_mask = 2
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Detector" unique_id=2124444386]
 shape = SubResource("CircleShape2D_gaad3")
 
-[node name="DetectorDeath" type="Area2D" parent="." unique_id=1346915062]
-visible = false
-collision_layer = 0
-collision_mask = 2
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="DetectorDeath" unique_id=883951243]
-position = Vector2(1, -10)
-shape = SubResource("RectangleShape2D_k8mrl")
-
 [node name="AttackDirection" type="Node2D" parent="." unique_id=696512184]
 
 [node name="AttackRange" type="Area2D" parent="AttackDirection" unique_id=100324289]
@@ -508,10 +496,9 @@ collision_layer = 0
 collision_mask = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="AttackDirection/AttackRange" unique_id=1582778152]
-position = Vector2(36.8125, 0)
+position = Vector2(29.8125, 0)
 shape = SubResource("RectangleShape2D_gaad3")
 
 [connection signal="body_entered" from="Detector" to="." method="_on_detector_body_entered"]
 [connection signal="body_exited" from="Detector" to="." method="_on_detector_body_exited"]
-[connection signal="body_entered" from="DetectorDeath" to="." method="_on_detector_death_body_entered"]
 [connection signal="body_entered" from="AttackDirection/AttackRange" to="." method="_on_attack_range_body_entered"]
