@@ -9,7 +9,7 @@
 [ext_resource type="Texture2D" uid="uid://k8qop3rbofr7" path="res://assets/player/Slimes/slime_move.png" id="4_qyy51"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_pl2bp"]
-size = Vector2(19, 14)
+size = Vector2(15, 12)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_dtwdv"]
 atlas = ExtResource("2_pjjie")
@@ -640,10 +640,10 @@ _data = {
 }
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_pjjie"]
-size = Vector2(18, 14)
+size = Vector2(14, 14)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_qiwj3"]
-size = Vector2(15, 12)
+size = Vector2(12, 11)
 
 [node name="Player" type="CharacterBody2D" unique_id=1611053112 groups=["player"]]
 collision_layer = 2
@@ -654,13 +654,14 @@ position = Vector2(0.5, -3)
 shape = SubResource("RectangleShape2D_pl2bp")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=10312668]
-position = Vector2(1, -8)
+position = Vector2(1, -6)
+scale = Vector2(0.7916667, 0.7916667)
 sprite_frames = SubResource("SpriteFrames_4hx83")
-animation = &"Attack"
+animation = &"Idle"
 autoplay = "Idle"
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1449075574]
-zoom = Vector2(2.4, 2.4)
+zoom = Vector2(3.2, 3.2)
 process_callback = 0
 limit_left = 0
 limit_right = 1160
@@ -687,18 +688,17 @@ collision_layer = 0
 collision_mask = 4
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="AttackDirection/AttackRange" unique_id=451756334]
-position = Vector2(19, 2.3841858e-07)
+position = Vector2(16, 0)
 shape = SubResource("RectangleShape2D_pjjie")
 
 [node name="HurtBox" type="Node2D" parent="." unique_id=2146830027]
-visible = false
 
 [node name="HurtArea" type="Area2D" parent="HurtBox" unique_id=387656299]
 collision_layer = 6
 collision_mask = 4
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="HurtBox/HurtArea" unique_id=208260026]
-position = Vector2(0.5, -3)
+position = Vector2(1, -2.5)
 shape = SubResource("RectangleShape2D_qiwj3")
 
 [connection signal="body_entered" from="AttackDirection/AttackRange" to="." method="_on_attack_range_body_entered"]

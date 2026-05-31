@@ -11,5 +11,14 @@ var wall_jump_push: float = 200.0
 
 var crystals: int = 0
 
+var cur_armor: int = 0
+var cur_weapon: int = 0
+var cur_accessory: int = 0
+
+var cur_level: int = 1
+var cur_level_type: String = "cave"
+
+
+
   
  

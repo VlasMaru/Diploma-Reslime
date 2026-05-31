@@ -54,10 +54,10 @@ func _physics_process(delta: float) -> void:
 		JUMP:
 			jump_state(delta)
 		FALL:
-			$CollisionShape2D.shape.size = Vector2(9, 14)
+			$CollisionShape2D.shape.size = Vector2(10, 13)
 			fall_state(delta)
 		WALLSLIDE:
-			$CollisionShape2D.shape.size = Vector2(9, 14)
+			$CollisionShape2D.shape.size = Vector2(10, 13)
 			wallslide_state(delta)
 		ATTACK:
 			attack_state(delta)
@@ -76,10 +76,10 @@ func _physics_process(delta: float) -> void:
 func move_state(delta: float) -> void:
 	apply_base_movement(delta)
 	if velocity.x != 0:
-		$CollisionShape2D.shape.size = Vector2(19, 14)
+		$CollisionShape2D.shape.size = Vector2(15, 12)
 		animPlay.play("Run")
 	else:
-		$CollisionShape2D.shape.size = Vector2(19, 14)
+		$CollisionShape2D.shape.size = Vector2(15, 12)
 		animPlay.play("Idle")
 		
 	if not is_on_floor():

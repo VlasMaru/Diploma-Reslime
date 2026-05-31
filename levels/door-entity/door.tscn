@@ -41,7 +41,7 @@ func open_door() -> void:
 
 func _on_body_entered(body: Node2D) -> void:
 	if body.name == \"Player\" and is_open:
-		get_tree().change_scene_to_file(\"res://levels/start_level.tscn\")
+		get_tree().change_scene_to_file(\"res://levels/GeneratedLevelTest.tscn\")
 		
 "
 
@@ -110,6 +110,6 @@ scale = Vector2(0.75984395, 0.75984406)
 sprite_frames = SubResource("SpriteFrames_yf8k7")
 animation = &"Opened"
 autoplay = "Closed"
-frame_progress = 0.38266444
+frame_progress = 0.69915634
 
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]
