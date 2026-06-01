@@ -118,7 +118,6 @@ func enter_state():
 		ATTACK:
 			velocity = Vector2.ZERO
 			animPlayer.play(\"Bite\")
-			deal_damage()
 
 		ATTACK_COOLDOWN:
 			velocity = Vector2.ZERO
@@ -163,15 +162,11 @@ func deal_damage():
 	var bodies = $AttackDirection/AttackRange.get_overlapping_bodies()
 	for body in bodies:
 		if body.name == \"Player\":
-			body.health -= 20
-
-		if body.name == \"hurtbox\" and body.get_parent().name == \"Player\":
-			body.get_parent().health -= 20
-
-		if \"health\" in body and body.health <= 0:
-			state = IDLE
-			$AttackDirection/AttackRange/CollisionShape2D.set_deferred(\"disabled\", true)
-			$Detector/CollisionShape2D.set_deferred(\"disabled\", true)
+			body.health -= 30
+			if \"health\" in body and body.health <= 0:
+				state = IDLE
+				$AttackDirection/AttackRange/CollisionShape2D.set_deferred(\"disabled\", true)
+				$Detector/CollisionShape2D.set_deferred(\"disabled\", true)
 
 
 func _on_animation_finished(anim_name: String):
@@ -258,6 +253,20 @@ tracks/1/keys = {
 "transitions": PackedFloat32Array(1),
 "update": 1,
 "values": ["Bite"]
+}
+tracks/2/type = "method"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath(".")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0.18),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [],
+"method": &"deal_damage"
+}]
 }
 
 [sub_resource type="Animation" id="Animation_53tpl"]
@@ -707,9 +716,8 @@ libraries/ = SubResource("AnimationLibrary_hojkv")
 position = Vector2(0, -6)
 scale = Vector2(0.8103448, 0.8103448)
 sprite_frames = SubResource("SpriteFrames_7oman")
-animation = &"Idle"
+animation = &"Bite"
 autoplay = "Idle"
-frame_progress = 0.7624531
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1300574984]
 rotation = -1.5707964

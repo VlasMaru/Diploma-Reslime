@@ -89,7 +89,6 @@ func enter_state():
 		ATTACK:
 			velocity.x = 0
 			animPlayer.play("Bite")
-			deal_damage()
 
 		ATTACK_COOLDOWN:
 			velocity.x = 0
@@ -106,9 +105,8 @@ func enter_state():
 
 func chase_state():
 	direction = (player_pos - position).normalized()
-
 	velocity.x = direction.x * speed
-
+	
 	if direction.x < 0:
 		anim.flip_h = true
 		$AttackDirection.rotation_degrees = 180

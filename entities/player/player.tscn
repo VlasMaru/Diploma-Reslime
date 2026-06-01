@@ -654,7 +654,7 @@ shape = SubResource("RectangleShape2D_pl2bp")
 position = Vector2(1, -6)
 scale = Vector2(0.7916667, 0.7916667)
 sprite_frames = SubResource("SpriteFrames_4hx83")
-animation = &"Idle"
+animation = &"Attack"
 autoplay = "Idle"
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1449075574]

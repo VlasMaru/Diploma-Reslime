@@ -3,6 +3,7 @@
 [ext_resource type="PackedScene" uid="uid://wpcwvxwh0kut" path="res://levels/enviroment/start_cave_bg.tscn" id="1_ii2ba"]
 [ext_resource type="Texture2D" uid="uid://buyh4ev21kpbn" path="res://assets/textures/cave_set/Tilesetv3.png" id="2_ao76o"]
 [ext_resource type="PackedScene" uid="uid://4h6t3fhiwcgb" path="res://entities/player/player.tscn" id="3_ao76o"]
+[ext_resource type="Texture2D" uid="uid://cfbye75uc7p2i" path="res://assets/mobs/seller_idle.png" id="4_csg43"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_csg43"]
 texture = ExtResource("2_ao76o")
@@ -1462,6 +1463,207 @@ func _on_body_entered(body: Node2D) -> void:
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_csg43"]
 size = Vector2(26, 39)
 
+[sub_resource type="GDScript" id="GDScript_a3scf"]
+script/source = "extends CharacterBody2D
+
+const UPGRADE_COST := 10
+const MAX_LEVEL := 2
+
+@onready var window = $CanvasLayer/UpgradeWindow
+@onready var label = $CanvasLayer/UpgradeWindow/Label
+@onready var yes_button = $CanvasLayer/UpgradeWindow/YesButton
+@onready var no_button = $CanvasLayer/UpgradeWindow/NoButton
+
+var offered_upgrade := \"\"
+
+func _ready():
+	window.hide()
+	yes_button.pressed.connect(_on_yes_pressed)
+	no_button.pressed.connect(_on_no_pressed)
+	
+func _physics_process(delta):
+	if not is_on_floor():
+		velocity += get_gravity() * delta
+	move_and_slide()
+
+func interact():
+	open_upgrade_window()
+
+func open_upgrade_window():
+	offered_upgrade = get_random_upgrade()
+
+	if offered_upgrade == \"\":
+		label.text = \"Все предметы улучшены до максимума.\"
+		window.show()
+		return
+
+	var next_level = get_upgrade_level(offered_upgrade) + 2
+
+	label.text = \"Улучшить %s до уровня %d за %d кристаллов?\" % [
+		get_upgrade_name(offered_upgrade),
+		next_level,
+		UPGRADE_COST
+	]
+
+	yes_button.disabled = false
+	no_button.disabled = false
+	window.show()
+
+func get_random_upgrade() -> String:
+	var variants = []
+
+	if PlayerStats.cur_weapon < MAX_LEVEL:
+		variants.append(\"weapon\")
+
+	if PlayerStats.cur_armor < MAX_LEVEL:
+		variants.append(\"armor\")
+
+	if PlayerStats.cur_accessory < MAX_LEVEL:
+		variants.append(\"accessory\")
+
+	if variants.is_empty():
+		return \"\"
+
+	return variants.pick_random()
+
+func get_upgrade_level(upgrade_type: String) -> int:
+	match upgrade_type:
+		\"weapon\":
+			return PlayerStats.cur_weapon
+		\"armor\":
+			return PlayerStats.cur_armor
+		\"accessory\":
+			return PlayerStats.cur_accessory
+
+	return 0
+
+func get_upgrade_name(upgrade_type: String) -> String:
+	match upgrade_type:
+		\"weapon\":
+			return \"оружие\"
+		\"armor\":
+			return \"броню\"
+		\"accessory\":
+			return \"аксессуар\"
+
+	return \"\"
+
+func _on_yes_pressed():
+	if offered_upgrade == \"\":
+		window.hide()
+		return
+
+	if PlayerStats.crystals < UPGRADE_COST:
+		label.text = \"Недостаточно кристаллов!\"
+		yes_button.disabled = true
+		no_button.disabled = true
+
+		await get_tree().create_timer(2.0).timeout
+		get_tree().change_scene_to_file(\"res://ui/menus/main_menu/main_menu.tscn\")
+		return
+
+	PlayerStats.crystals -= UPGRADE_COST
+
+	match offered_upgrade:
+		\"weapon\":
+			PlayerStats.cur_weapon += 1
+		\"armor\":
+			PlayerStats.cur_armor += 1
+		\"accessory\":
+			PlayerStats.cur_accessory += 1
+
+	PlayerStats.recalculate_stats()
+
+	label.text = \"Улучшение успешно куплено!\"
+
+	yes_button.disabled = true
+	no_button.disabled = true
+
+	await get_tree().create_timer(1.5).timeout
+
+	window.hide()
+
+func _on_no_pressed():
+	window.hide()
+"
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_jupup"]
+size = Vector2(35, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ae64v"]
+atlas = ExtResource("4_csg43")
+region = Rect2(0, 0, 146, 146)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_a4d2p"]
+atlas = ExtResource("4_csg43")
+region = Rect2(146, 0, 146, 146)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_arp2d"]
+atlas = ExtResource("4_csg43")
+region = Rect2(292, 0, 146, 146)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4krjj"]
+atlas = ExtResource("4_csg43")
+region = Rect2(438, 0, 146, 146)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jjarj"]
+atlas = ExtResource("4_csg43")
+region = Rect2(584, 0, 146, 146)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qvfw0"]
+atlas = ExtResource("4_csg43")
+region = Rect2(730, 0, 146, 146)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_kpf4a"]
+atlas = ExtResource("4_csg43")
+region = Rect2(876, 0, 146, 146)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ynnia"]
+atlas = ExtResource("4_csg43")
+region = Rect2(1022, 0, 146, 146)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hlvl3"]
+atlas = ExtResource("4_csg43")
+region = Rect2(1168, 0, 146, 146)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_f7706"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ae64v")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_a4d2p")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_arp2d")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_4krjj")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_jjarj")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qvfw0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_kpf4a")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ynnia")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hlvl3")
+}],
+"loop": true,
+"name": &"Idle",
+"speed": 8.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_a3scf"]
+size = Vector2(39, 26)
+
 [node name="StartLevel" type="Node2D" unique_id=1961062995]
 
 [node name="StartCaveBg" parent="." unique_id=267352750 instance=ExtResource("1_ii2ba")]
@@ -1488,5 +1690,64 @@ script = SubResource("GDScript_ao76o")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="EnterTrigger" unique_id=807579786]
 position = Vector2(601, 91.5)
 shape = SubResource("RectangleShape2D_csg43")
+
+[node name="CharacterBody2D" type="CharacterBody2D" parent="." unique_id=1783863964]
+position = Vector2(526, 104)
+collision_layer = 4
+script = SubResource("GDScript_a3scf")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CharacterBody2D" unique_id=149069657]
+position = Vector2(0.5, -4)
+shape = SubResource("RectangleShape2D_jupup")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="CharacterBody2D" unique_id=1901692672]
+scale = Vector2(0.74657536, 0.74657536)
+sprite_frames = SubResource("SpriteFrames_f7706")
+animation = &"Idle"
+autoplay = "Idle"
+frame_progress = 0.41519067
+
+[node name="Hitbox" type="Area2D" parent="CharacterBody2D" unique_id=37151021]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CharacterBody2D/Hitbox" unique_id=698057992]
+position = Vector2(1, -5)
+shape = SubResource("RectangleShape2D_a3scf")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="CharacterBody2D" unique_id=1432581128]
+
+[node name="UpgradeWindow" type="Control" parent="CharacterBody2D/CanvasLayer" unique_id=824638788]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Label" type="Label" parent="CharacterBody2D/CanvasLayer/UpgradeWindow" unique_id=1988650906]
+layout_mode = 0
+offset_left = 64.0
+offset_top = 29.0
+offset_right = 201.91837
+offset_bottom = 91.0
+theme_override_font_sizes/font_size = 17
+text = "Улучшить?
+"
+
+[node name="YesButton" type="Button" parent="CharacterBody2D/CanvasLayer/UpgradeWindow" unique_id=974116940]
+layout_mode = 0
+offset_left = 59.0
+offset_top = 69.0
+offset_right = 88.0
+offset_bottom = 97.0
+theme_override_font_sizes/font_size = 14
+text = "Да"
+
+[node name="NoButton" type="Button" parent="CharacterBody2D/CanvasLayer/UpgradeWindow" unique_id=87086938]
+layout_mode = 0
+offset_left = 123.0
+offset_top = 68.0
+offset_right = 157.0
+offset_bottom = 96.0
+theme_override_font_sizes/font_size = 14
+text = "Нет
+"
 
 [connection signal="body_entered" from="EnterTrigger" to="EnterTrigger" method="_on_body_entered"]

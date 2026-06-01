@@ -24,17 +24,20 @@ var health: int = PlayerStats.current_health:
 			animPlay.play("Damage")
 			PlayerStats.current_health = val
 			health = val
-
+		if val > health:
+			health = val
+			PlayerStats.current_health = val
+			
 var bodyInAttackRange = false
 var target
 var player_pos 
 var state = MOVE
+var crystall = PlayerStats.crystals
 
 func _ready() -> void:
 	animPlay.animation_finished.connect(_on_animation_finished)
 
 func _physics_process(delta: float) -> void:
-	# обработка смерти
 	if health <= 0 and state != DEATH:
 		state = DEATH
 		handle_death()
@@ -44,9 +47,7 @@ func _physics_process(delta: float) -> void:
 			velocity.y += gravity * delta
 		move_and_slide()
 		return
-	
 	var was_on_floor = is_on_floor()
-	# конечный автомат
 	match state:
 		MOVE:
 			move_state(delta)
@@ -68,9 +69,6 @@ func _physics_process(delta: float) -> void:
 	Signals.emit_signal("player_position_update", player_pos)
 	if was_on_floor and not is_on_floor() and velocity.y >= 0:
 		coyoteTimer.start()
-
-
-# состояния
 
 func move_state(delta: float) -> void:
 	apply_base_movement(delta)
@@ -100,7 +98,6 @@ func jump_state(delta: float) -> void:
 func fall_state(delta: float) -> void:
 	apply_base_movement(delta)
 	animPlay.play("Fall")
-	
 	var direction := Input.get_axis("left", "right")
 	
 	if is_on_floor():
@@ -136,7 +133,6 @@ func damage_state(delta: float) -> void:
 		velocity.y += gravity * delta
 	velocity.x = move_toward(velocity.x, 0, PlayerStats.speed)
 
-#ловит пользовательский ввод
 func apply_base_movement(delta: float) -> void:
 	if not is_on_floor():
 		velocity.y += gravity * delta
@@ -174,21 +170,22 @@ func perform_attack() -> void:
 	animPlay.play("Attack")
 	state = ATTACK
 	if bodyInAttackRange and target != null:
-		target.health -= PlayerStats.damage
-		if ($AttackDirection.rotation_degrees == 0):
-			target.velocity.x += 200
+		if target.has_method("interact"):
+			target.interact()
+			health = PlayerStats.max_health
 		else:
-			target.velocity.x -= 200
-		
-
-
-
+			target.health -= PlayerStats.damage
+			if ($AttackDirection.rotation_degrees == 0):
+				target.velocity.x += 200
+			else:
+				target.velocity.x -= 200
 
 func handle_death() -> void:
 	velocity.x = 0
 	animPlay.play("Death")
 	await animPlay.animation_finished
 	PlayerStats.current_health = 100
+	PlayerStats.cur_level = 1
 	get_tree().call_deferred("change_scene_to_file", "res://ui/menus/main_menu/main_menu.tscn")
 	
 
@@ -199,12 +196,11 @@ func _on_animation_finished(anim_name: String) -> void:
 		else:
 			state = FALL
 
-
 func _on_attack_range_body_entered(body: Node2D) -> void:
 	bodyInAttackRange = true
 	target = body
 
 
-func _on_attack_range_body_exited(body: Node2D) -> void:
+func _on_attack_range_body_exited(_body: Node2D) -> void:
 	bodyInAttackRange = false
 	target = null

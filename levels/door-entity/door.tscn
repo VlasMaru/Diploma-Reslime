@@ -19,14 +19,12 @@ func _ready() -> void:
 	check_enemies_count()
 
 func _on_enemy_died() -> void:
-	print(\"X-X\")
 	check_enemies_count()
 
 func check_enemies_count() -> void:
 	if is_open:
 		return
 	var living_enemies = get_tree().get_nodes_in_group(\"enemies\")
-	print(living_enemies)
 	var alive_count = 0
 	for enemy in living_enemies:
 		if \"alive\" in enemy and enemy.alive:
@@ -41,7 +39,9 @@ func open_door() -> void:
 
 func _on_body_entered(body: Node2D) -> void:
 	if body.name == \"Player\" and is_open:
-		get_tree().change_scene_to_file(\"res://levels/GeneratedLevelTest.tscn\")
+		var scene_path = \"res://levels/GeneratedLevel%s.tscn\" % PlayerStats.cur_level
+		PlayerStats.cur_level+=1
+		get_tree().change_scene_to_file(scene_path)
 		
 "
 
