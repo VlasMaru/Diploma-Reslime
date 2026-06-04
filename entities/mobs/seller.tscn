@@ -7,7 +7,6 @@ script/source = "extends CharacterBody2D
 
 const UPGRADE_COST := 10
 const MAX_LEVEL := 2
-var isActive = false
 
 @onready var window = $CanvasLayer/UpgradeWindow
 @onready var label = $CanvasLayer/UpgradeWindow/Label
@@ -15,6 +14,7 @@ var isActive = false
 @onready var no_button = $CanvasLayer/UpgradeWindow/NoButton
 
 var offered_upgrade := \"\"
+var isActive = false
 
 func _ready():
 	window.hide()
@@ -29,7 +29,9 @@ func _physics_process(delta):
 func interact():
 	if (!isActive):
 		open_upgrade_window()
+		print(\"meow\")
 		isActive = true
+	return
 
 func open_upgrade_window():
 	offered_upgrade = get_random_upgrade()
@@ -126,7 +128,7 @@ func _on_no_pressed():
 "
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_jupup"]
-size = Vector2(35, 24)
+size = Vector2(35, 23)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ae64v"]
 atlas = ExtResource("1_a3scf")
@@ -200,14 +202,14 @@ animations = [{
 }]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_a3scf"]
-size = Vector2(39, 26)
+size = Vector2(39, 24)
 
-[node name="CharacterBody2D" type="CharacterBody2D" unique_id=1783863964]
+[node name="Seller" type="CharacterBody2D" unique_id=1783863964]
 collision_layer = 4
 script = SubResource("GDScript_a3scf")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=149069657]
-position = Vector2(0.5, -4)
+position = Vector2(0.5, -4.5)
 shape = SubResource("RectangleShape2D_jupup")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1901692672]
@@ -220,7 +222,7 @@ frame_progress = 0.47156206
 [node name="Hurtbox" type="Area2D" parent="." unique_id=37151021]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox" unique_id=698057992]
-position = Vector2(1, -5)
+position = Vector2(1, -6)
 shape = SubResource("RectangleShape2D_a3scf")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1432581128]
@@ -232,28 +234,36 @@ offset_right = 40.0
 offset_bottom = 40.0
 
 [node name="Label" type="Label" parent="CanvasLayer/UpgradeWindow" unique_id=1988650906]
-layout_mode = 0
-offset_left = 20.0
-offset_top = -39.0
-offset_right = 60.0
-offset_bottom = -16.0
+layout_mode = 1
+offset_left = 77.0
+offset_top = 26.0
+offset_right = 167.0
+offset_bottom = 75.0
 text = "Улучшить?
 "
 
 [node name="YesButton" type="Button" parent="CanvasLayer/UpgradeWindow" unique_id=974116940]
-layout_mode = 0
-offset_left = 43.0
-offset_top = -12.0
-offset_right = 51.0
-offset_bottom = -4.0
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 78.0
+offset_top = 38.0
+offset_right = 107.0
+offset_bottom = 69.0
+grow_vertical = 2
 text = "Да"
 
 [node name="NoButton" type="Button" parent="CanvasLayer/UpgradeWindow" unique_id=87086938]
-layout_mode = 0
-offset_left = 79.0
-offset_top = -12.0
-offset_right = 117.0
-offset_bottom = 19.0
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 129.0
+offset_top = 37.0
+offset_right = 167.0
+offset_bottom = 68.0
+grow_vertical = 2
 text = "Нет
 "
 
