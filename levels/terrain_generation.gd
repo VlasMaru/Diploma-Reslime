@@ -21,6 +21,8 @@ var rng = RandomNumberGenerator.new()
 @export var rat_scene: PackedScene
 @export var base_enemy_count: int = 5 # Базовое количество врагов на уровне
 
+var min_spawn_distance = 10
+
 func _ready():
 	rng.randomize() 
 	
@@ -54,8 +56,8 @@ func create_terrain():
 	# Используем call_deferred, чтобы спавн произошел в следующем кадре,
 	# когда физика уже готова
 	call_deferred("spawn_player", map_data)
-	call_deferred("spawn_door", map_data)
 	call_deferred("spawn_enemies", map_data)
+	call_deferred("spawn_door", map_data)
 
 # --- АЛГОРИТМЫ ГЕНЕРАЦИИ (БЕЗ ИЗМЕНЕНИЙ) ---
 
@@ -240,46 +242,57 @@ func spawn_enemies(map_data: Array):
 
 	var empty_cells = []
 	
-	# Собираем все свободные клетки (пол)
+	# 1. Сбор всех свободных клеток
 	for y in range(1, height - 1):
 		for x in range(1, width - 1):
-			# Ищем клетки пола. 
-			# Можно добавить дополнительные проверки, чтобы не спавнить врагов слишком близко к игроку
 			if map_data[y][x] == 0:
-				empty_cells.append(Vector2i(x, y))
+				empty_cells.append(Vector2(x, y))
 
 	if empty_cells.is_empty():
-		print("Нет свободных клеток для спавна врагов")
 		return
 
-	# Перемешиваем массив свободных клеток для случайного распределения
+	# Перемешиваем массив для случайного распределения
 	empty_cells.shuffle()
 
-	# Рассчитываем количество врагов в зависимости от текущего уровня
-	# Это позволит плавно повышать сложность
-	var enemies_to_spawn = base_enemy_count + int(PlayerStats.cur_level * 1.5)
-	enemies_to_spawn = min(enemies_to_spawn, empty_cells.size()) 
+	# Получаем координаты игрока в сетке тайлов для проверки дистанции
+	var player_tile_pos = tile_layer.local_to_map(current_player.global_position)
 	
+	# Рассчитываем итоговое количество врагов
+	var enemies_to_spawn = base_enemy_count + int(PlayerStats.cur_level * 1.5)
+	var spawned_count = 0
 	var tile_size = tile_layer.tile_set.tile_size
 
-	for i in range(enemies_to_spawn):
-		# Извлекаем последнюю клетку из перемешанного массива (чтобы не было спавна в одной точке)
+	# 2. Настройка спавна в зависимости от биома/уровня
+	# Если уровень пещерный (<= 3), шанс на летучую мышь 80%. 
+	# В замке (BSP) шанс на летучую мышь падает до 25% (будет больше крыс).
+	var bat_chance: float = 0.8 if PlayerStats.cur_level <= 3 else 0.25
+
+	# 3. Цикл размещения с проверкой безопасности
+	while spawned_count < enemies_to_spawn and empty_cells.size() > 0:
 		var spawn_pos = empty_cells.pop_back()
+
+		# Проверка дистанции: используем встроенный метод distance_to для векторов
+		if spawn_pos.distance_to(Vector2(player_tile_pos)) < min_spawn_distance:
+			continue # Слишком близко к игроку, пропускаем эту клетку
+
 		var enemy_instance = null
-		
-		# Простая логика выбора: 50% шанс на летучую мышь, 50% на крысу
-		# Можно усложнить: в пещерах (is_cave) больше летучих мышей, в замке (BSP) — крыс
-		if rng.randf() > 0.5 and bat_scene:
+
+		# Бросаем случайное число от 0.0 до 1.0 для выбора типа врага
+		if rng.randf() <= bat_chance and bat_scene:
 			enemy_instance = bat_scene.instantiate()
 		elif rat_scene:
 			enemy_instance = rat_scene.instantiate()
-		elif bat_scene: # Фолбэк, если одна из сцен не назначена
+		elif bat_scene: # Фолбэк, если крыса вдруг не назначена
 			enemy_instance = bat_scene.instantiate()
 			
+		# Если враг успешно выбран, размещаем его
 		if enemy_instance != null:
-			# Устанавливаем глобальную позицию точно по центру тайла
-			enemy_instance.global_position = tile_layer.map_to_local(spawn_pos) + Vector2(tile_size.x / 2.0, tile_size.y / 2.0)
+			enemy_instance.global_position = tile_layer.map_to_local(Vector2i(spawn_pos)) + Vector2(tile_size.x / 2.0, tile_size.y / 2.0)
 			add_child(enemy_instance)
+			spawned_count += 1
+			
+	if spawned_count < enemies_to_spawn:
+		print("Внимание: Удалось заспавнить только ", spawned_count, " врагов из ", enemies_to_spawn, " из-за нехватки места.")
 	
 func _setup_camera():
 	await get_tree().process_frame

@@ -9,7 +9,7 @@
 [ext_resource type="Texture2D" uid="uid://k8qop3rbofr7" path="res://assets/player/Slimes/slime_move.png" id="4_qyy51"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_pl2bp"]
-size = Vector2(15, 12)
+size = Vector2(14, 12)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_dtwdv"]
 atlas = ExtResource("2_pjjie")
