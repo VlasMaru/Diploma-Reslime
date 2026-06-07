@@ -10,6 +10,7 @@
 [ext_resource type="Texture2D" uid="uid://dfakudsx6tkn2" path="res://assets/player/Slimes/slime_idle2.png" id="8_7r6xy"]
 [ext_resource type="Texture2D" uid="uid://k8qop3rbofr7" path="res://assets/player/Slimes/slime_move.png" id="9_acfae"]
 [ext_resource type="PackedScene" uid="uid://b7kjg2xvgt8rp" path="res://entities/mobs/seller.tscn" id="10_57w36"]
+[ext_resource type="PackedScene" uid="uid://jujejrmu8dgp" path="res://ui/hud/player_hud.tscn" id="11_2w113"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_csg43"]
 texture = ExtResource("2_ao76o")
@@ -2178,6 +2179,8 @@ collision_mask = 4
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Player/AttackDirection/AttackRange" unique_id=451756334]
 position = Vector2(17, 0)
 shape = SubResource("RectangleShape2D_pjjie")
+
+[node name="PlayerHud" parent="." unique_id=759456732 instance=ExtResource("11_2w113")]
 
 [connection signal="body_entered" from="EnterTrigger" to="EnterTrigger" method="_on_body_entered"]
 [connection signal="body_entered" from="Player/AttackDirection/AttackRange" to="Player" method="_on_attack_range_body_entered"]
