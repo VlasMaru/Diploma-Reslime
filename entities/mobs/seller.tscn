@@ -38,7 +38,12 @@ func open_upgrade_window():
 
 	if offered_upgrade == \"\":
 		label.text = \"Все предметы улучшены до максимума.\"
+		yes_button.visible = false
+		no_button.visible = false
 		window.show()
+		await get_tree().create_timer(2).timeout
+		isActive = false
+		window.hide()
 		return
 
 	var next_level = get_upgrade_level(offered_upgrade) + 2
