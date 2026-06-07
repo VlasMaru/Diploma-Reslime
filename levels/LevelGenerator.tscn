@@ -3,6 +3,8 @@
 [ext_resource type="Script" uid="uid://dw7wgdtc2kjtl" path="res://levels/terrain_generation.gd" id="1_18xq1"]
 [ext_resource type="PackedScene" uid="uid://df6dbhy5e0ibg" path="res://levels/door-entity/door.tscn" id="2_foe67"]
 [ext_resource type="TileSet" uid="uid://c72fkocgryt0e" path="res://assets/tilesets/terrain.tres" id="2_la0fh"]
+[ext_resource type="PackedScene" uid="uid://djoxsxl1wbne" path="res://entities/enemies/bat/bat_enemy.tscn" id="3_ser8e"]
+[ext_resource type="PackedScene" uid="uid://hw776nmy347a" path="res://entities/enemies/rat/rat_enemy.tscn" id="4_et0pv"]
 
 [node name="LevelGenerator" type="Node2D" unique_id=700836007]
 
@@ -12,6 +14,8 @@ width = 80
 height = 30
 tile_layer = NodePath("Terrain")
 door_scene = ExtResource("2_foe67")
+bat_scene = ExtResource("3_ser8e")
+rat_scene = ExtResource("4_et0pv")
 
 [node name="Terrain" type="TileMapLayer" parent="TerrainGeneration" unique_id=264640030]
 tile_set = ExtResource("2_la0fh")
