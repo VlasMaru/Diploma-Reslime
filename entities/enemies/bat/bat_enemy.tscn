@@ -696,13 +696,14 @@ animations = [{
 }]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_2t1py"]
+radius = 7.5
 height = 44.0
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_ifoxl"]
 radius = 128.0039
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_yvhbu"]
-size = Vector2(24, 26)
+size = Vector2(21, 19)
 
 [node name="BatEnemy" type="CharacterBody2D" unique_id=2137662292 groups=["enemies"]]
 collision_layer = 4
@@ -713,17 +714,20 @@ crystal_scene = ExtResource("1_11c4q")
 libraries/ = SubResource("AnimationLibrary_hojkv")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1288904478]
-position = Vector2(0, -6)
-scale = Vector2(0.8103448, 0.8103448)
+position = Vector2(-4, -6)
+scale = Vector2(0.7270115, 0.7270115)
 sprite_frames = SubResource("SpriteFrames_7oman")
 animation = &"Bite"
 autoplay = "Idle"
+frame = 10
+frame_progress = 1.0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1300574984]
 rotation = -1.5707964
 shape = SubResource("CapsuleShape2D_2t1py")
 
 [node name="Detector" type="Area2D" parent="." unique_id=651933893]
+visible = false
 collision_layer = 0
 collision_mask = 2
 
@@ -738,7 +742,7 @@ collision_layer = 0
 collision_mask = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="AttackDirection/AttackRange" unique_id=1464831096]
-position = Vector2(39.8125, 2)
+position = Vector2(38.3125, -0.5)
 shape = SubResource("RectangleShape2D_yvhbu")
 
 [node name="AttackCooldown" type="Timer" parent="." unique_id=1763930018]
