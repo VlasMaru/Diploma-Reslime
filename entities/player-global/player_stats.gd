@@ -18,6 +18,19 @@ var cur_accessory: int = 0
 var cur_level: int = 1
 var cur_level_type: String = "cave"
 
+var player_color: String = ""
+var _initialized: bool = false
+
+func _ready():
+	if not _initialized:
+		_initialize_color()
+		_initialized = true
+
+func _initialize_color():
+	var colors = ["green", "pink", "blue"]
+	var random_index = randi() % colors.size()
+	player_color = colors[random_index] 
+	print("Player color initialized: ", player_color)
 
 func recalculate_stats():
 	match cur_weapon:
