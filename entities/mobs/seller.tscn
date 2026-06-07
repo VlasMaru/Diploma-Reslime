@@ -19,8 +19,8 @@ var isActive = false
 
 func _ready():
 	window.hide()
-	yes_button.pressed.connect(_on_yes_pressed)
-	no_button.pressed.connect(_on_no_pressed)
+	#yes_button.pressed.connect(_on_yes_pressed)
+	#no_button.pressed.connect(_on_no_pressed)
 	
 func _physics_process(delta):
 	if not is_on_floor():
