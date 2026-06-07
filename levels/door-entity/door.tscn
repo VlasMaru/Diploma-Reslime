@@ -41,7 +41,8 @@ func _on_body_entered(body: Node2D) -> void:
 	if body.name == \"Player\" and is_open:
 		var scene_path = \"res://levels/GeneratedLevel%s.tscn\" % PlayerStats.cur_level
 		PlayerStats.cur_level+=1
-		get_tree().change_scene_to_file(scene_path)
+		FadeLayer.change_scene(scene_path)
+		#get_tree().change_scene_to_file(scene_path)
 		
 "
 

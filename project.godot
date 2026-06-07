@@ -18,6 +18,7 @@ config/features=PackedStringArray("4.6", "Forward Plus")
 
 Signals="*uid://bsplc1skocsvg"
 PlayerStats="*uid://bpc3d63u6qbk6"
+FadeLayer="*uid://cd4fjec57dp50"
 
 [dotnet]
 
