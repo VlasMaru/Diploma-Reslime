@@ -15,6 +15,8 @@ extends Node2D
 var rng = RandomNumberGenerator.new()
 @export var current_player: CharacterBody2D
 
+@export var door_scene: PackedScene
+
 func _ready():
 	rng.randomize() 
 	
@@ -32,7 +34,7 @@ func create_terrain():
 	var map_data = []
 	
 	# Выбираем алгоритм генерации
-	if is_cave:
+	if PlayerStats.cur_level <= 3:
 		map_data = generate_cave()
 		#map_data = expand_caves_softer(map_data)
 
@@ -48,6 +50,7 @@ func create_terrain():
 	# Используем call_deferred, чтобы спавн произошел в следующем кадре,
 	# когда физика уже готова
 	call_deferred("spawn_player", map_data)
+	call_deferred("spawn_door", map_data)
 
 # --- АЛГОРИТМЫ ГЕНЕРАЦИИ (БЕЗ ИЗМЕНЕНИЙ) ---
 
@@ -195,6 +198,35 @@ func spawn_player(map_data: Array):
 	var tile_size = tile_layer.tile_set.tile_size
 	current_player.global_position = tile_layer.map_to_local(random_tile) + Vector2(tile_size.x / 2, tile_size.y / 2)
 	_setup_camera()
+	
+func spawn_door(map_data: Array):
+	if door_scene == null:
+		print("Сцена двери не назначена в инспекторе!")
+		return
+
+	var empty_cells = []
+	# Поиск подходящих точек (свободная клетка, под которой находится стена)
+	for y in range(1, height - 1):
+		for x in range(1, width - 1):
+			if map_data[y][x] == 0 and map_data[y + 1][x] == 0 and map_data[y + 2][x] == 1 and map_data[y - 1][x] == 0 and map_data[y][x + 1] == 0 and map_data[y + 1][x + 1] == 0 and map_data[y + 2][x + 1] == 1:
+				empty_cells.append(Vector2i(x, y))
+
+	if empty_cells.is_empty():
+		print("Нет подходящей точки спавна для двери")
+		return
+
+	# Выбираем случайную подходящую клетку
+	var random_tile = empty_cells.pick_random()
+	var tile_size = tile_layer.tile_set.tile_size
+	
+	# Создаем экземпляр двери
+	var door_instance = door_scene.instantiate()
+	
+	# Конвертируем координаты тайла в локальные координаты сцены
+	door_instance.global_position = tile_layer.map_to_local(random_tile) + Vector2(tile_size.x / 2.0, tile_size.y / 2.0)
+	
+	# Добавляем дверь на уровень
+	add_child(door_instance)
 	
 func _setup_camera():
 	await get_tree().process_frame

@@ -25,5 +25,5 @@ func _process(_delta: float) -> void:
 	if "health" in player:
 		health_bar.value = player.health
 	
-	if "crystal" in player:
-		gem_label.text = str(player.crystal)
+	if "crystals" in PlayerStats:
+		gem_label.text = str(PlayerStats.crystals)
