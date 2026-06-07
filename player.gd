@@ -21,7 +21,7 @@ var health: int = PlayerStats.current_health:
 			return
 		if val < health:
 			state = DAMAGE
-			animPlay.play("Damage")
+			animPlay.play("Damage_" + PlayerStats.player_color)
 			PlayerStats.current_health = val
 			health = val
 		if val > health:
@@ -74,10 +74,10 @@ func move_state(delta: float) -> void:
 	apply_base_movement(delta)
 	if velocity.x != 0:
 		$CollisionShape2D.shape.size = Vector2(15, 12)
-		animPlay.play("Run")
+		animPlay.play("Run_" + PlayerStats.player_color)
 	else:
 		$CollisionShape2D.shape.size = Vector2(15, 12)
-		animPlay.play("Idle")
+		animPlay.play("Idle_" + PlayerStats.player_color)
 		
 	if not is_on_floor():
 		state = FALL
@@ -88,7 +88,7 @@ func move_state(delta: float) -> void:
 
 func jump_state(delta: float) -> void:
 	apply_base_movement(delta)
-	animPlay.play("Jump")
+	animPlay.play("Jump_" + PlayerStats.player_color)
 	
 	if velocity.y >= 0:
 		state = FALL
@@ -97,7 +97,7 @@ func jump_state(delta: float) -> void:
 
 func fall_state(delta: float) -> void:
 	apply_base_movement(delta)
-	animPlay.play("Fall")
+	animPlay.play("Fall_" + PlayerStats.player_color)
 	var direction := Input.get_axis("left", "right")
 	
 	if is_on_floor():
@@ -114,7 +114,7 @@ func fall_state(delta: float) -> void:
 func wallslide_state(delta: float) -> void:
 	velocity.y = move_toward(velocity.y, PlayerStats.wall_slide_speed, gravity * delta)
 	$CollisionShape2D.shape.size = Vector2(11, 14)
-	animPlay.play("WallSlide")
+	animPlay.play("WallSlide_" + PlayerStats.player_color)
 	
 	var direction := Input.get_axis("left", "right")
 	
@@ -167,7 +167,7 @@ func perform_wall_jump() -> void:
 	state = JUMP
 
 func perform_attack() -> void:
-	animPlay.play("Attack")
+	animPlay.play("Attack_" + PlayerStats.player_color)
 	state = ATTACK
 	if bodyInAttackRange and target != null:
 		if target.has_method("interact"):
@@ -182,15 +182,15 @@ func perform_attack() -> void:
 
 func handle_death() -> void:
 	velocity.x = 0
-	animPlay.play("Death")
+	animPlay.play("Death_" + PlayerStats.player_color)
 	await animPlay.animation_finished
-	PlayerStats.current_health = 100
+	PlayerStats.current_health = PlayerStats.max_health
 	PlayerStats.cur_level = 1
 	get_tree().call_deferred("change_scene_to_file", "res://ui/menus/main_menu/main_menu.tscn")
 	
 
 func _on_animation_finished(anim_name: String) -> void:
-	if anim_name == "Attack" or anim_name == "Damage":
+	if anim_name == "Attack_" + PlayerStats.player_color or "Damage_" + PlayerStats.player_color:
 		if is_on_floor():
 			state = MOVE
 		else:
