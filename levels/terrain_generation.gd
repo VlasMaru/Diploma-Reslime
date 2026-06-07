@@ -17,6 +17,10 @@ var rng = RandomNumberGenerator.new()
 
 @export var door_scene: PackedScene
 
+@export var bat_scene: PackedScene
+@export var rat_scene: PackedScene
+@export var base_enemy_count: int = 5 # Базовое количество врагов на уровне
+
 func _ready():
 	rng.randomize() 
 	
@@ -51,6 +55,7 @@ func create_terrain():
 	# когда физика уже готова
 	call_deferred("spawn_player", map_data)
 	call_deferred("spawn_door", map_data)
+	call_deferred("spawn_enemies", map_data)
 
 # --- АЛГОРИТМЫ ГЕНЕРАЦИИ (БЕЗ ИЗМЕНЕНИЙ) ---
 
@@ -227,6 +232,54 @@ func spawn_door(map_data: Array):
 	
 	# Добавляем дверь на уровень
 	add_child(door_instance)
+	
+func spawn_enemies(map_data: Array):
+	if bat_scene == null and rat_scene == null:
+		print("Сцены противников не назначены!")
+		return
+
+	var empty_cells = []
+	
+	# Собираем все свободные клетки (пол)
+	for y in range(1, height - 1):
+		for x in range(1, width - 1):
+			# Ищем клетки пола. 
+			# Можно добавить дополнительные проверки, чтобы не спавнить врагов слишком близко к игроку
+			if map_data[y][x] == 0:
+				empty_cells.append(Vector2i(x, y))
+
+	if empty_cells.is_empty():
+		print("Нет свободных клеток для спавна врагов")
+		return
+
+	# Перемешиваем массив свободных клеток для случайного распределения
+	empty_cells.shuffle()
+
+	# Рассчитываем количество врагов в зависимости от текущего уровня
+	# Это позволит плавно повышать сложность
+	var enemies_to_spawn = base_enemy_count + int(PlayerStats.cur_level * 1.5)
+	enemies_to_spawn = min(enemies_to_spawn, empty_cells.size()) 
+	
+	var tile_size = tile_layer.tile_set.tile_size
+
+	for i in range(enemies_to_spawn):
+		# Извлекаем последнюю клетку из перемешанного массива (чтобы не было спавна в одной точке)
+		var spawn_pos = empty_cells.pop_back()
+		var enemy_instance = null
+		
+		# Простая логика выбора: 50% шанс на летучую мышь, 50% на крысу
+		# Можно усложнить: в пещерах (is_cave) больше летучих мышей, в замке (BSP) — крыс
+		if rng.randf() > 0.5 and bat_scene:
+			enemy_instance = bat_scene.instantiate()
+		elif rat_scene:
+			enemy_instance = rat_scene.instantiate()
+		elif bat_scene: # Фолбэк, если одна из сцен не назначена
+			enemy_instance = bat_scene.instantiate()
+			
+		if enemy_instance != null:
+			# Устанавливаем глобальную позицию точно по центру тайла
+			enemy_instance.global_position = tile_layer.map_to_local(spawn_pos) + Vector2(tile_size.x / 2.0, tile_size.y / 2.0)
+			add_child(enemy_instance)
 	
 func _setup_camera():
 	await get_tree().process_frame
