@@ -110,6 +110,5 @@ scale = Vector2(0.75984395, 0.75984406)
 sprite_frames = SubResource("SpriteFrames_yf8k7")
 animation = &"Opened"
 autoplay = "Closed"
-frame_progress = 0.69915634
 
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]
