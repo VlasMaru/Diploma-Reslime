@@ -14,6 +14,7 @@ const MAX_LEVEL := 2
 @onready var no_button = $CanvasLayer/UpgradeWindow/NoButton
 
 var offered_upgrade := \"\"
+var isOffered := false
 var isActive = false
 
 func _ready():
@@ -29,13 +30,14 @@ func _physics_process(delta):
 func interact():
 	if (!isActive):
 		open_upgrade_window()
-		print(\"meow\")
 		isActive = true
 	return
 
 func open_upgrade_window():
-	offered_upgrade = get_random_upgrade()
-
+	if (!isOffered):
+		offered_upgrade = get_random_upgrade()
+		isOffered = true
+		
 	if offered_upgrade == \"\":
 		label.text = \"Все предметы улучшены до максимума.\"
 		yes_button.visible = false
@@ -93,7 +95,6 @@ func get_upgrade_name(upgrade_type: String) -> String:
 			return \"броню\"
 		\"accessory\":
 			return \"аксессуар\"
-
 	return \"\"
 
 func _on_yes_pressed():
@@ -121,6 +122,7 @@ func _on_yes_pressed():
 			
 	PlayerStats.recalculate_stats()
 	label.text = \"Улучшение успешно куплено!\"
+	isOffered = false
 	yes_button.disabled = true
 	no_button.disabled = true
 	await get_tree().create_timer(1.5).timeout
@@ -222,7 +224,8 @@ scale = Vector2(0.74657536, 0.74657536)
 sprite_frames = SubResource("SpriteFrames_f7706")
 animation = &"Idle"
 autoplay = "Idle"
-frame_progress = 0.47156206
+frame_progress = 0.89063686
+flip_h = true
 
 [node name="Hurtbox" type="Area2D" parent="." unique_id=37151021]
 
@@ -241,9 +244,9 @@ offset_bottom = 40.0
 [node name="Label" type="Label" parent="CanvasLayer/UpgradeWindow" unique_id=1988650906]
 layout_mode = 1
 offset_left = 77.0
-offset_top = 26.0
+offset_top = 58.0
 offset_right = 167.0
-offset_bottom = 75.0
+offset_bottom = 107.0
 text = "Улучшить?
 "
 
@@ -252,10 +255,10 @@ layout_mode = 1
 anchors_preset = 4
 anchor_top = 0.5
 anchor_bottom = 0.5
-offset_left = 78.0
-offset_top = 38.0
-offset_right = 107.0
-offset_bottom = 69.0
+offset_left = 77.0
+offset_top = 68.0
+offset_right = 106.0
+offset_bottom = 99.0
 grow_vertical = 2
 text = "Да"
 
@@ -264,10 +267,10 @@ layout_mode = 1
 anchors_preset = 4
 anchor_top = 0.5
 anchor_bottom = 0.5
-offset_left = 129.0
-offset_top = 37.0
-offset_right = 167.0
-offset_bottom = 68.0
+offset_left = 133.0
+offset_top = 68.0
+offset_right = 171.0
+offset_bottom = 99.0
 grow_vertical = 2
 text = "Нет
 "

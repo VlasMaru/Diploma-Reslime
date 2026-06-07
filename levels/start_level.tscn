@@ -2176,7 +2176,7 @@ position = Vector2(601, 91.5)
 shape = SubResource("RectangleShape2D_csg43")
 
 [node name="Seller" parent="." unique_id=263402278 instance=ExtResource("10_57w36")]
-position = Vector2(526, 105)
+position = Vector2(541, 105)
 
 [connection signal="body_entered" from="Player/AttackDirection/AttackRange" to="Player" method="_on_attack_range_body_entered"]
 [connection signal="body_exited" from="Player/AttackDirection/AttackRange" to="Player" method="_on_attack_range_body_exited"]
